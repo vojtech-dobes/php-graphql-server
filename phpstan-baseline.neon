@@ -1,0 +1,109 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Cannot call method resolve\(\) on GuzzleHttp\\Promise\\Promise\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/GraphQL/Deferred.php
+
+		-
+			message: '#^PHPDoc tag @var with type Vojtechdobes\\GraphQL\\TypeSystem\\TypeWithFieldSelection is not subtype of native type Vojtechdobes\\GraphQL\\TypeSystem\\TypeDefinition\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: src/GraphQL/ExecutableDocumentBuilder.php
+
+		-
+			message: '#^PHPDoc tag @var with type Vojtechdobes\\GraphQL\\TypeSystem\\TypeWithFieldSelection\|null is not subtype of native type Vojtechdobes\\GraphQL\\TypeSystem\\TypeDefinition\|null\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: src/GraphQL/ExecutableDocumentBuilder.php
+
+		-
+			message: '#^Parameter \$operationDefinitions of class Vojtechdobes\\GraphQL\\Executable\\Document constructor expects non\-empty\-list\<Vojtechdobes\\GraphQL\\Executable\\OperationDefinition\>, list\<Vojtechdobes\\GraphQL\\Executable\\OperationDefinition\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/GraphQL/ExecutableDocumentBuilder.php
+
+		-
+			message: '#^Call to an undefined method GuzzleHttp\\Promise\\Promise\|object\:\:otherwise\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/GraphQL/Execution/OperationExecution.php
+
+		-
+			message: '#^Cannot call method resolveField\(\) on Vojtechdobes\\GraphQL\\FieldResolver\<mixed, mixed, array\<string, mixed\>, mixed\>\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/GraphQL/Execution/OperationExecution.php
+
+		-
+			message: '#^PHPDoc tag @var with type Vojtechdobes\\GraphQL\\TypeSystem\\TypeWithFieldSelection is not subtype of native type Vojtechdobes\\GraphQL\\TypeSystem\\TypeDefinition\.$#'
+			identifier: varTag.nativeType
+			count: 2
+			path: src/GraphQL/Execution/OperationExecution.php
+
+		-
+			message: '#^Cannot access property \$description on Vojtechdobes\\GraphQL\\TypeSystem\\Builder\\RootOperationTypes\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/GraphQL/SchemaBuilder.php
+
+		-
+			message: '#^Cannot access property \$directives on Vojtechdobes\\GraphQL\\TypeSystem\\Builder\\RootOperationTypes\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/GraphQL/SchemaBuilder.php
+
+		-
+			message: '#^Cannot access property \$types on Vojtechdobes\\GraphQL\\TypeSystem\\Builder\\RootOperationTypes\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/GraphQL/SchemaBuilder.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between Vojtechdobes\\GraphQL\\Types\\Type and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/GraphQL/SchemaBuilder.php
+
+		-
+			message: '#^Call to an undefined method object\:\:createSchema\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/GraphQL/SchemaLoader.php
+
+		-
+			message: '#^Parameter \#1 \$filename of function filemtime expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/GraphQL/SchemaLoader.php
+
+		-
+			message: '#^Parameter \#1 \$schemaString of method Vojtechdobes\\GraphQL\\SchemaParser\:\:parseSchema\(\) expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/GraphQL/SchemaLoader.php
+
+		-
+			message: '#^Parameter \#1 \$schemaString of method Vojtechdobes\\GraphQL\\SchemaParser\:\:parseRawSchema\(\) expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/GraphQL/SchemaParser.php
+
+		-
+			message: '#^Method Vojtechdobes\\GraphQL\\TypeSystem\\Schema\:\:getRootOperationTypeDefinition\(\) should return Vojtechdobes\\GraphQL\\TypeSystem\\ObjectTypeDefinition\|null but returns Vojtechdobes\\GraphQL\\TypeSystem\\TypeDefinition\.$#'
+			identifier: return.type
+			count: 1
+			path: src/GraphQL/TypeSystem/Schema.php
+
+		-
+			message: '#^Offset ''file'' might not exist on array\{function\: string, line\?\: int, file\?\: string, class\?\: class\-string, type\?\: ''\-\>''\|''\:\:'', args\?\: array\<mixed\>, object\?\: object\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: tests/bootstrap.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: tests/bootstrap.php
