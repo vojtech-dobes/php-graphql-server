@@ -33,7 +33,7 @@
 		"nette/tester": "~2.5.0",
 		"phpstan/phpstan": "~2.1.0",
 		"psr/log": "~3.0.0",
-		"spaze/phpstan-disallowed-calls": "~4.4.0",
+		"spaze/phpstan-disallowed-calls": "~4.5.0",
 		"tracy/tracy": "~2.10.0"
 	},
 	"scripts": {
