@@ -1,0 +1,24 @@
+includes:
+  - phpstan-baseline.neon
+  - vendor/jiripudil/phpstan-sealed-classes/extension.neon
+  - vendor/spaze/phpstan-disallowed-calls/extension.neon
+
+parameters:
+  disallowedFunctionCalls:
+    - function:
+        - 'dump()'
+        - 'var_dump()'
+      message: 'avoid committing debug calls'
+
+  earlyTerminatingMethodCalls:
+    Tester\Assert:
+      - fail
+
+  excludePaths:
+    - tests/temp/*
+
+  level: 8
+
+  paths:
+    - src
+    - tests
