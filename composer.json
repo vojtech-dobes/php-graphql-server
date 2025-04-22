@@ -24,8 +24,8 @@
 	"require": {
 		"php": "~8.4",
 		"ext-pcre": "*",
-		"guzzlehttp/promises": "^2.0",
-		"nette/php-generator": "~4.1.0",
+		"guzzlehttp/promises": "^2.0.3",
+		"nette/php-generator": "^4.0",
 		"vojtech-dobes/php-grammar-processing": "dev-master"
 	},
 	"require-dev": {
