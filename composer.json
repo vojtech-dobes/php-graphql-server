@@ -24,17 +24,17 @@
 	"require": {
 		"php": "~8.4",
 		"ext-pcre": "*",
-		"guzzlehttp/promises": "^2.0",
-		"nette/php-generator": "~4.1.0",
+		"guzzlehttp/promises": "^2.0.3",
+		"nette/php-generator": "^4.0",
 		"vojtech-dobes/php-grammar-processing": "dev-master"
 	},
 	"require-dev": {
-		"jiripudil/phpstan-sealed-classes": "~1.3.0",
-		"nette/tester": "~2.5.0",
-		"phpstan/phpstan": "~2.1.0",
-		"psr/log": "~3.0.0",
-		"spaze/phpstan-disallowed-calls": "~4.5.0",
-		"tracy/tracy": "~2.10.0"
+		"jiripudil/phpstan-sealed-classes": "^1.3.0",
+		"nette/tester": "^2.5.4",
+		"phpstan/phpstan": "^2.1.12",
+		"psr/log": "^3.0",
+		"spaze/phpstan-disallowed-calls": "^4.5.0",
+		"tracy/tracy": "^2.10.9"
 	},
 	"scripts": {
 		"phpstan": "phpstan analyse --memory-limit 256M",

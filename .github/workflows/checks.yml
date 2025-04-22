@@ -26,13 +26,16 @@ jobs:
         run: composer run phpstan
 
   tests:
-    name: PHP ${{ matrix.php }} tests on ${{ matrix.os }}
+    name: PHP ${{ matrix.php }} tests on ${{ matrix.os }} with ${{ matrix.deps }} deps
 
     needs:
       - static_analysis
 
     strategy:
       matrix:
+        deps:
+          - stable
+          - lowest
         os:
           - macOS-latest
           - ubuntu-latest
@@ -56,6 +59,9 @@ jobs:
           coverage: none
 
       - run: composer install --ansi --no-progress --prefer-dist
+
+      - run: composer update --ansi --no-progress --prefer-lowest
+        if: matrix.deps == 'lowest'
 
       - name: Run tests
         run: composer run test
