@@ -2,10 +2,10 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-Tester\Dumper::$dumpDir = __DIR__ . '/output';
+Tester\Dumper::$dumpDir = __DIR__ . '/../tests-output';
 Tester\Environment::setup();
 
-const TempDir = __DIR__ . '/temp';
+const TempDir = __DIR__ . '/../tests-temp';
 
 function getTempDirForTestCase(): string
 {

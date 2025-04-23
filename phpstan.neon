@@ -14,9 +14,6 @@ parameters:
     Tester\Assert:
       - fail
 
-  excludePaths:
-    - tests/temp/*
-
   level: 8
 
   paths:
