@@ -250,12 +250,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vojtech-dobes/php-grammar-processing.git",
-                "reference": "5999e3d4fbdefa7313573879ad70059119ddcd46"
+                "reference": "7243f2591a5ab8bbf2348ec35bb392d03593db3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vojtech-dobes/php-grammar-processing/zipball/5999e3d4fbdefa7313573879ad70059119ddcd46",
-                "reference": "5999e3d4fbdefa7313573879ad70059119ddcd46",
+                "url": "https://api.github.com/repos/vojtech-dobes/php-grammar-processing/zipball/7243f2591a5ab8bbf2348ec35bb392d03593db3d",
+                "reference": "7243f2591a5ab8bbf2348ec35bb392d03593db3d",
                 "shasum": ""
             },
             "require": {
@@ -263,9 +263,10 @@
                 "php": "~8.4"
             },
             "require-dev": {
-                "nette/tester": "~2.5.0",
-                "phpstan/phpstan": "~2.1.0",
-                "spaze/phpstan-disallowed-calls": "~4.4.0"
+                "nette/tester": "^2.5.4",
+                "phpstan/phpstan": "^2.1.12",
+                "spaze/phpstan-disallowed-calls": "^4.5.0",
+                "tracy/tracy": "^2.10.9"
             },
             "default-branch": true,
             "type": "library",
@@ -296,9 +297,10 @@
                 "token"
             ],
             "support": {
+                "issues": "https://github.com/vojtech-dobes/php-grammar-processing/issues",
                 "source": "https://github.com/vojtech-dobes/php-grammar-processing/tree/master"
             },
-            "time": "2025-03-28T15:36:26+00:00"
+            "time": "2025-04-25T15:54:05+00:00"
         }
     ],
     "packages-dev": [
