@@ -9,3 +9,6 @@ trim_trailing_whitespace = true
 [*.{md,neon,yml}]
 indent_size = 2
 indent_style = space
+
+[phpstan-baseline.neon]
+indent_style = tab
