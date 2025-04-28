@@ -1,11 +1,10 @@
 <?php declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/constants.php';
 
-Tester\Dumper::$dumpDir = __DIR__ . '/../tests-output';
+Tester\Dumper::$dumpDir = OutputDir;
 Tester\Environment::setup();
-
-const TempDir = __DIR__ . '/../tests-temp';
 
 function getTempDirForTestCase(): string
 {
