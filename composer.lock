@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "60450ba216f7960ac6affb27ea52c145",
+    "content-hash": "cbd2576e2310e632234e576cb359c6da",
     "packages": [
         {
             "name": "guzzlehttp/promises",
@@ -250,12 +250,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vojtech-dobes/php-grammar-processing.git",
-                "reference": "5999e3d4fbdefa7313573879ad70059119ddcd46"
+                "reference": "7243f2591a5ab8bbf2348ec35bb392d03593db3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vojtech-dobes/php-grammar-processing/zipball/5999e3d4fbdefa7313573879ad70059119ddcd46",
-                "reference": "5999e3d4fbdefa7313573879ad70059119ddcd46",
+                "url": "https://api.github.com/repos/vojtech-dobes/php-grammar-processing/zipball/7243f2591a5ab8bbf2348ec35bb392d03593db3d",
+                "reference": "7243f2591a5ab8bbf2348ec35bb392d03593db3d",
                 "shasum": ""
             },
             "require": {
@@ -263,9 +263,10 @@
                 "php": "~8.4"
             },
             "require-dev": {
-                "nette/tester": "~2.5.0",
-                "phpstan/phpstan": "~2.1.0",
-                "spaze/phpstan-disallowed-calls": "~4.4.0"
+                "nette/tester": "^2.5.4",
+                "phpstan/phpstan": "^2.1.12",
+                "spaze/phpstan-disallowed-calls": "^4.5.0",
+                "tracy/tracy": "^2.10.9"
             },
             "default-branch": true,
             "type": "library",
@@ -296,9 +297,10 @@
                 "token"
             ],
             "support": {
+                "issues": "https://github.com/vojtech-dobes/php-grammar-processing/issues",
                 "source": "https://github.com/vojtech-dobes/php-grammar-processing/tree/master"
             },
-            "time": "2025-03-28T15:36:26+00:00"
+            "time": "2025-04-25T15:54:05+00:00"
         }
     ],
     "packages-dev": [
@@ -444,6 +446,67 @@
                 "source": "https://github.com/nette/tester/tree/v2.5.4"
             },
             "time": "2024-10-23T23:57:10+00:00"
+        },
+        {
+            "name": "php-parallel-lint/php-parallel-lint",
+            "version": "v1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-parallel-lint/PHP-Parallel-Lint.git",
+                "reference": "6db563514f27e19595a19f45a4bf757b6401194e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-parallel-lint/PHP-Parallel-Lint/zipball/6db563514f27e19595a19f45a4bf757b6401194e",
+                "reference": "6db563514f27e19595a19f45a4bf757b6401194e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=5.3.0"
+            },
+            "replace": {
+                "grogy/php-parallel-lint": "*",
+                "jakub-onderka/php-parallel-lint": "*"
+            },
+            "require-dev": {
+                "nette/tester": "^1.3 || ^2.0",
+                "php-parallel-lint/php-console-highlighter": "0.* || ^1.0",
+                "squizlabs/php_codesniffer": "^3.6"
+            },
+            "suggest": {
+                "php-parallel-lint/php-console-highlighter": "Highlight syntax in code snippet"
+            },
+            "bin": [
+                "parallel-lint"
+            ],
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "./src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Jakub Onderka",
+                    "email": "ahoj@jakubonderka.cz"
+                }
+            ],
+            "description": "This tool checks the syntax of PHP files about 20x faster than serial check.",
+            "homepage": "https://github.com/php-parallel-lint/PHP-Parallel-Lint",
+            "keywords": [
+                "lint",
+                "static analysis"
+            ],
+            "support": {
+                "issues": "https://github.com/php-parallel-lint/PHP-Parallel-Lint/issues",
+                "source": "https://github.com/php-parallel-lint/PHP-Parallel-Lint/tree/v1.4.0"
+            },
+            "time": "2024-03-27T12:14:49+00:00"
         },
         {
             "name": "phpstan/phpstan",
