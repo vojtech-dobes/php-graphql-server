@@ -4,6 +4,7 @@ includes:
   - vendor/spaze/phpstan-disallowed-calls/extension.neon
 
 parameters:
+  checkMissingCallableSignature: true
   disallowedFunctionCalls:
     - function:
         - 'dump()'
@@ -13,6 +14,16 @@ parameters:
   earlyTerminatingMethodCalls:
     Tester\Assert:
       - fail
+
+  exceptions:
+    check:
+      missingCheckedExceptionInThrows: true
+      tooWideThrowType: true
+
+    uncheckedExceptionClasses:
+      - Error
+      - LogicException
+      - ReflectionException
 
   level: 8
 

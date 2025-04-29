@@ -8,12 +8,34 @@ final class Error
 
 	/**
 	 * @param array<string, mixed>|null $extensions
+	 * @param list<
+	 *   array{
+	 *     line: int,
+	 *     column: int,
+	 *   },
+	 * > $locations
 	 */
 	public function __construct(
 		public readonly string $message,
 		private readonly ?Execution\ResponsePath $responsePath = null,
 		private readonly ?array $extensions = null,
+		private readonly array $locations = [],
 	) {}
+
+
+
+	public function withLocation(int $line, int $column): self
+	{
+		return new self(
+			$this->message,
+			$this->responsePath,
+			$this->extensions,
+			[...$this->locations, [
+				'line' => $line,
+				'column' => $column,
+			]],
+		);
+	}
 
 
 
@@ -22,6 +44,8 @@ final class Error
 		return new self(
 			$this->message,
 			$responsePath,
+			$this->extensions,
+			$this->locations,
 		);
 	}
 
@@ -38,6 +62,10 @@ final class Error
 		$result = [
 			'message' => $this->message,
 		];
+
+		if ($this->locations !== []) {
+			$result['locations'] = $this->locations;
+		}
 
 		if ($this->responsePath !== null) {
 			$result['path'] = $this->responsePath->getPath();

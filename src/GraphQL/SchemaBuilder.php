@@ -270,12 +270,7 @@ final class SchemaBuilder
 		$this->validate();
 
 		if ($this->errors->errors !== []) {
-			throw new Exceptions\InconsistentSchemaException(
-				array_map(
-					static fn ($error) => $error->message,
-					$this->errors->errors,
-				),
-			);
+			throw new Exceptions\InconsistentSchemaException($this->errors->errors);
 		}
 
 		$schemaBlocks = $this->createSchemaBlocks();
@@ -303,7 +298,9 @@ final class SchemaBuilder
 				$rootOperationTypes['query'] = Spec::DefaultQueryType;
 			} else {
 				throw new Exceptions\InconsistentSchemaException([
-					"Schema must define query root operation type '{$queryRootOperationType}'",
+					new Error(
+						"Schema must define query root operation type '{$queryRootOperationType}'",
+					),
 				]);
 			}
 		}

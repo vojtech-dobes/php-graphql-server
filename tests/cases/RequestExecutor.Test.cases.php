@@ -1,11 +1,39 @@
 <?php declare(strict_types=1);
 
-function FailResolvingWithMessage(string $message): callable { return static fn () => throw new Vojtechdobes\GraphQL\Exceptions\FailedToResolveFieldException($message); }
-function ResolveFromArgument(string $argumentName): callable { return static fn ($parent, $field) => $field->arguments[$argumentName]; }
-function ResolveFromParent(): callable { return static fn ($parent, $field) => $parent[$field->name]; }
-function ShouldNotResolve(): callable { return static fn () => Tester\Assert::fail("shouldn't be called"); }
+/**
+ * @return callable(): never
+ */
+function FailResolvingWithMessage(string $message): callable {
+	return static fn () => throw new Vojtechdobes\GraphQL\Exceptions\FailedToResolveFieldException($message);
+}
 
-function ResolveAbstractTypeByField(string $fieldName): callable { return static fn ($objectValue) => $objectValue[$fieldName]; }
+/**
+ * @return callable(mixed, Vojtechdobes\GraphQL\FieldSelection): mixed
+ */
+function ResolveFromArgument(string $argumentName): callable {
+	return static fn ($parent, $field) => $field->arguments[$argumentName];
+}
+
+/**
+ * @return callable(mixed, Vojtechdobes\GraphQL\FieldSelection): mixed
+ */
+function ResolveFromParent(): callable {
+	return static fn ($parent, $field) => $parent[$field->name];
+}
+
+/**
+ * @return callable(): mixed
+ */
+function ShouldNotResolve(): callable {
+	return static fn () => Tester\Assert::fail("shouldn't be called");
+}
+
+/**
+ * @return callable(mixed): string
+ */
+function ResolveAbstractTypeByField(string $fieldName): callable {
+	return static fn ($objectValue) => $objectValue[$fieldName];
+}
 
 return [
 	...require_once __DIR__ . '/RequestExecutor.Test.cases-arguments.php',

@@ -17,6 +17,11 @@ final class Service
 
 
 
+	/**
+	 * @throws Exceptions\CannotParseExecutableDocumentException
+	 * @throws Exceptions\InconsistentExecutableDocumentException
+	 * @throws Exceptions\InvalidExecutableDocumentException
+	 */
 	public function parseExecutableDocument(string $documentText): Executable\Document
 	{
 		return $this->executableDocumentParser

@@ -39,6 +39,9 @@ try {
 } catch (Vojtechdobes\GraphQL\Exceptions\InvalidSchemaException $e) {
 	Tester\Assert::same(
 		expected: $expectedErrors,
-		actual: $e->errors,
+		actual: array_map(
+			static fn ($error) => $error->message,
+			$e->errors,
+		),
 	);
 }

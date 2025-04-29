@@ -3,19 +3,32 @@
 namespace Vojtechdobes\GraphQL\Exceptions;
 
 use RuntimeException;
+use Throwable;
+use Vojtechdobes\GraphQL;
 
 
 abstract class InvalidExecutableDocumentException extends RuntimeException
 {
 
 	/**
-	 * @param non-empty-list<string> $errors
+	 * @param non-empty-list<GraphQL\Error> $errors
 	 */
 	final public function __construct(
 		public readonly array $errors,
+		?Throwable $previous = null,
 	)
 	{
-		parent::__construct("Errors:\n- " . implode("\n -", $errors));
+		parent::__construct(
+			sprintf(
+				"Errors:\n- %s",
+				implode("\n -", array_map(
+					static fn ($error) => $error->message,
+					$errors,
+				)),
+			),
+			0,
+			$previous,
+		);
 	}
 
 }

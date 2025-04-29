@@ -90,7 +90,7 @@ final class OperationExecution
 					new GraphQL\Types\NonNullType(
 						new GraphQL\Types\NamedType('__Schema'),
 					),
-					$this->introspectionSchemaResolver->resolveField(null, $executionField),
+					$this->introspectionSchemaResolver->resolveField(null, $executionField), // @phpstan-ignore missingType.checkedException
 				);
 
 				continue;
@@ -101,7 +101,7 @@ final class OperationExecution
 					$field,
 					$executionField,
 					new GraphQL\Types\NamedType('__Type'),
-					$this->introspectionTypeResolver->resolveField(null, $executionField),
+					$this->introspectionTypeResolver->resolveField(null, $executionField), // @phpstan-ignore missingType.checkedException
 				);
 
 				$areAllFieldsNotNullable = false;
@@ -529,12 +529,33 @@ final class OperationExecution
 			);
 		}
 
-		return new ScalarFieldValue(
-			$this->schema
-				->scalarImplementationRegistry
-				->getItem($typeDefinition->name)
-				->serialize($value),
-		);
+		try {
+			return new ScalarFieldValue(
+				$this->schema
+					->scalarImplementationRegistry
+					->getItem($typeDefinition->name)
+					->serialize($value),
+			);
+		} catch (GraphQL\Exceptions\CannotSerializeScalarValueException $e) {
+			return new ErrorFieldValue(
+				new GraphQL\Error(
+					$e->getMessage(),
+					null,
+					$e->extensions,
+				),
+			);
+		} catch (Throwable $e) {
+			$this->errorHandler->handleSerializeScalarError($e, $executionField, $value);
+
+			return new ErrorFieldValue(
+				new GraphQL\Error(
+					sprintf(
+						"Scalar type %s failed to serialize",
+						$typeDefinition->name,
+					),
+				),
+			);
+		}
 	}
 
 }

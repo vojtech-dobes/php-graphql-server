@@ -164,9 +164,16 @@ final class Parser
 				->parseSource($document, $rootSymbol)
 				->interpret($this->interpretation);
 		} catch (GrammarProcessing\CannotConsumeTokenException $e) {
-			throw new GraphQL\Exceptions\CannotParseDocumentException([
-				$e->getMessage(),
-			]);
+			$error = new GraphQL\Error($e->getMessage());
+
+			if ($e->location !== null) {
+				$error = $error->withLocation(
+					line: $e->location->line,
+					column: $e->location->column,
+				);
+			}
+
+			throw new GraphQL\Exceptions\CannotParseDocumentException([$error], $e);
 		}
 	}
 
