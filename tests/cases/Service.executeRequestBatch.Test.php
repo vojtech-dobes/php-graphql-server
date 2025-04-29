@@ -21,6 +21,9 @@ class Buffer
 
 }
 
+/**
+ * @return callable(mixed, Vojtechdobes\GraphQL\FieldSelection): Vojtechdobes\GraphQL\Deferred<string>
+ */
 function ResolveWithBufferAndVariable(): callable {
 	return static function ($parent, Vojtechdobes\GraphQL\FieldSelection $fieldSelection): Vojtechdobes\GraphQL\Deferred {
 		Buffer::add($fieldSelection->name . '+' . $fieldSelection->arguments['arg']);
