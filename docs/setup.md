@@ -11,9 +11,9 @@ To execute your GraphQL schema (in order to resolve incoming requests), you can 
 $graphQLService = new GraphQL\Service( ... );
 
 $document = $graphQLService->parseExecutableDocument($documentText);
-$result = $graphQLService->executeRequest(
-  new GraphQL\Request($document, $variables),
-);
+$result = $graphQLService
+  ->executeRequest(new GraphQL\Request($document, $variables))
+  ->wait();
 ```
 
 Setting up `Service` can be done manually or using an integration for your framework.
