@@ -29,7 +29,7 @@ final class ExecutableSchema
 	 */
 	public function validate(): void
 	{
-		$errors = [];
+		$errors = new Errors();
 
 		$fieldResolverProvider = $this->createCompleteFieldResolverProvider();
 
@@ -43,9 +43,11 @@ final class ExecutableSchema
 					$knownFieldNames[] = $fieldName;
 
 					if ($fieldResolverProvider->hasFieldResolver($fieldName) === false) {
-						$errors[] = sprintf(
-							"Field '%s' doesn't have a resolver",
-							$fieldName,
+						$errors->addErrorMessage(
+							sprintf(
+								"Field '%s' doesn't have a resolver",
+								$fieldName,
+							),
 						);
 					}
 				}
@@ -54,10 +56,12 @@ final class ExecutableSchema
 				|| $typeDefinition instanceof TypeSystem\UnionTypeDefinition
 			) {
 				if ($this->abstractTypeResolverProvider->hasAbstractTypeResolver($typeDefinition->name) === false) {
-					$errors[] = sprintf(
-						"Abstract %s type '%s' doesn't have a resolver",
-						$typeDefinition->kind->format(),
-						$typeDefinition->name,
+					$errors->addErrorMessage(
+						sprintf(
+							"Abstract %s type '%s' doesn't have a resolver",
+							$typeDefinition->kind->format(),
+							$typeDefinition->name,
+						),
 					);
 				}
 			}
@@ -65,28 +69,32 @@ final class ExecutableSchema
 
 		foreach ($this->abstractTypeResolverProvider->listSupportedTypeNames() as $typeName) {
 			if ($this->schema->getTypeDefinitionOrNull($typeName) === null) {
-				$errors[] = sprintf(
-					"Abstract type '%s' has resolver but doesn't exist in schema",
-					$typeName,
+				$errors->addErrorMessage(
+					sprintf(
+						"Abstract type '%s' has resolver but doesn't exist in schema",
+						$typeName,
+					),
 				);
 			}
 		}
 
-		if ($errors !== []) {
-			throw new Exceptions\InvalidExecutableSchemaException($errors);
+		if ($errors->errors !== []) {
+			throw new Exceptions\InvalidExecutableSchemaException($errors->errors);
 		}
 
 		foreach ($fieldResolverProvider->listSupportedFieldNames() as $fieldName) {
 			if (in_array($fieldName, $knownFieldNames, true) === false) {
-				$errors[] = sprintf(
-					"Field '%s' has resolver but doesn't exist in schema",
-					$fieldName,
+				$errors->addErrorMessage(
+					sprintf(
+						"Field '%s' has resolver but doesn't exist in schema",
+						$fieldName,
+					),
 				);
 			}
 		}
 
-		if ($errors !== []) {
-			throw new Exceptions\InvalidExecutableSchemaException($errors);
+		if ($errors->errors !== []) {
+			throw new Exceptions\InvalidExecutableSchemaException($errors->errors);
 		}
 	}
 

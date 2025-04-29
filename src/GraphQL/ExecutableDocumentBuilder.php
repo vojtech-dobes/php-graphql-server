@@ -110,12 +110,7 @@ final class ExecutableDocumentBuilder
 		}
 
 		if ($this->errors->errors !== []) {
-			throw new Exceptions\InconsistentExecutableDocumentException(
-				array_map(
-					static fn ($error) => $error->message,
-					$this->errors->errors,
-				),
-			);
+			throw new Exceptions\InconsistentExecutableDocumentException($this->errors->errors);
 		}
 
 		return new Executable\Document(

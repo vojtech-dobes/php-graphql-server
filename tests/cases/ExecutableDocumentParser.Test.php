@@ -43,6 +43,9 @@ try {
 } catch (Vojtechdobes\GraphQL\Exceptions\InvalidExecutableDocumentException $e) {
 	Tester\Assert::same(
 		expected: $expectedErrors,
-		actual: $e->errors,
+		actual: array_map(
+			static fn ($error) => $error->message,
+			$e->errors,
+		),
 	);
 }
