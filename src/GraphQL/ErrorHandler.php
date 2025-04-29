@@ -24,4 +24,12 @@ interface ErrorHandler
 		mixed $objectValue,
 	): void;
 
+
+
+	function handleSerializeScalarError(
+		Throwable $e,
+		FieldSelection $fieldSelection,
+		mixed $scalarValue,
+	): void;
+
 }

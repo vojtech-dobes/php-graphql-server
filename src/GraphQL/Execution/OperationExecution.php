@@ -529,12 +529,33 @@ final class OperationExecution
 			);
 		}
 
-		return new ScalarFieldValue(
-			$this->schema
-				->scalarImplementationRegistry
-				->getItem($typeDefinition->name)
-				->serialize($value),
-		);
+		try {
+			return new ScalarFieldValue(
+				$this->schema
+					->scalarImplementationRegistry
+					->getItem($typeDefinition->name)
+					->serialize($value),
+			);
+		} catch (GraphQL\Exceptions\CannotSerializeScalarValueException $e) {
+			return new ErrorFieldValue(
+				new GraphQL\Error(
+					$e->getMessage(),
+					null,
+					$e->extensions,
+				),
+			);
+		} catch (Throwable $e) {
+			$this->errorHandler->handleSerializeScalarError($e, $executionField, $value);
+
+			return new ErrorFieldValue(
+				new GraphQL\Error(
+					sprintf(
+						"Scalar type %s failed to serialize",
+						$typeDefinition->name,
+					),
+				),
+			);
+		}
 	}
 
 }

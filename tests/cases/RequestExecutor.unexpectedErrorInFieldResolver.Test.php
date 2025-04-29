@@ -10,6 +10,8 @@ final class SilentErrorHandler implements Vojtechdobes\GraphQL\ErrorHandler
 
 	public function handleAbstractTypeResolverError(Throwable $e, Vojtechdobes\GraphQL\FieldSelection $fieldSelection, mixed $objectValue): void {}
 
+	public function handleSerializeScalarError(Throwable $e, Vojtechdobes\GraphQL\FieldSelection $fieldSelection, mixed $scalarValue): void {}
+
 }
 
 

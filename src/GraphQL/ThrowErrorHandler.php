@@ -20,4 +20,11 @@ final class ThrowErrorHandler implements ErrorHandler
 		throw $e;
 	}
 
+
+
+	public function handleSerializeScalarError(Throwable $e, FieldSelection $fieldSelection, mixed $scalarValue): void
+	{
+		throw $e;
+	}
+
 }

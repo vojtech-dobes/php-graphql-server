@@ -35,4 +35,13 @@ final class Psr3LogErrorHandler implements ErrorHandler
 		]);
 	}
 
+
+
+	public function handleSerializeScalarError(Throwable $e, FieldSelection $fieldSelection, mixed $scalarValue): void
+	{
+		$this->logger->log($this->level, 'GraphQL failed to serialize scalar type', [
+			'exception' => $e,
+		]);
+	}
+
 }
