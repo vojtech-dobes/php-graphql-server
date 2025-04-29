@@ -5,14 +5,20 @@ namespace Vojtechdobes\GraphQL;
 use GuzzleHttp;
 
 
+/**
+ * @template TValue
+ */
 final class Deferred
 {
 
-	/** @var callable(): mixed */
+	/** @var callable(): TValue */
 	private $callback;
 
 
 
+	/**
+	 * @param callable(): TValue $callback
+	 */
 	public function __construct(callable $callback)
 	{
 		$this->callback = $callback;
@@ -20,6 +26,9 @@ final class Deferred
 
 
 
+	/**
+	 * @return TValue
+	 */
 	public function execute(): mixed
 	{
 		return ($this->callback)();
