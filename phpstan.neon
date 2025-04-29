@@ -15,6 +15,16 @@ parameters:
     Tester\Assert:
       - fail
 
+  exceptions:
+    check:
+      missingCheckedExceptionInThrows: true
+      tooWideThrowType: true
+
+    uncheckedExceptionClasses:
+      - Error
+      - LogicException
+      - ReflectionException
+
   level: 8
 
   paths:

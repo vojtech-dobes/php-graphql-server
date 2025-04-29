@@ -62,6 +62,9 @@ final class SchemaParser
 
 
 
+	/**
+	 * @throws Exceptions\CannotParseSchemaException
+	 */
 	private function parseBuiltinSchema(): SchemaBuilder
 	{
 		$schemaBuilder = $this->parseRawSchema(
@@ -81,6 +84,9 @@ final class SchemaParser
 
 
 
+	/**
+	 * @throws Exceptions\CannotParseSchemaException
+	 */
 	private function parseIntrospectionSchema(): SchemaBuilder
 	{
 		return $this->parseRawSchema(
@@ -92,6 +98,9 @@ final class SchemaParser
 
 
 
+	/**
+	 * @throws Exceptions\CannotParseSchemaException
+	 */
 	private function parseRawSchema(
 		string $schemaString,
 		bool $allowReservedNames,

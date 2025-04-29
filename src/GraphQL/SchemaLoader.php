@@ -96,6 +96,8 @@ final class SchemaLoader
 	 *   fieldNamesWithResolver: list<string>,
 	 * })|null $backendValidator
 	 * @throws Exceptions\CannotGenerateCachedClassException
+	 * @throws Exceptions\CannotParseSchemaException
+	 * @throws Exceptions\InconsistentSchemaException
 	 * @throws Exceptions\InvalidExecutableSchemaException
 	 */
 	private function generateSchemaFactoryFile(

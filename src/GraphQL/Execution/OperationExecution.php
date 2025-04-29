@@ -90,7 +90,7 @@ final class OperationExecution
 					new GraphQL\Types\NonNullType(
 						new GraphQL\Types\NamedType('__Schema'),
 					),
-					$this->introspectionSchemaResolver->resolveField(null, $executionField),
+					$this->introspectionSchemaResolver->resolveField(null, $executionField), // @phpstan-ignore missingType.checkedException
 				);
 
 				continue;
@@ -101,7 +101,7 @@ final class OperationExecution
 					$field,
 					$executionField,
 					new GraphQL\Types\NamedType('__Type'),
-					$this->introspectionTypeResolver->resolveField(null, $executionField),
+					$this->introspectionTypeResolver->resolveField(null, $executionField), // @phpstan-ignore missingType.checkedException
 				);
 
 				$areAllFieldsNotNullable = false;
