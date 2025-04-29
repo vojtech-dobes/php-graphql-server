@@ -43,6 +43,18 @@ parameters:
 			path: src/GraphQL/Execution/OperationExecution.php
 
 		-
+			message: '#^Call to __construct\(\) on an existing object is not allowed\.$#'
+			identifier: constructor.call
+			count: 1
+			path: src/GraphQL/Introspection/IntrospectionFieldResolverProvider.php
+
+		-
+			message: '#^Variable property access on object\.$#'
+			identifier: property.dynamicName
+			count: 1
+			path: src/GraphQL/PropertyFieldResolver.php
+
+		-
 			message: '#^Cannot access property \$description on Vojtechdobes\\GraphQL\\TypeSystem\\Builder\\RootOperationTypes\|null\.$#'
 			identifier: property.nonObject
 			count: 1
@@ -89,6 +101,18 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: src/GraphQL/SchemaParser.php
+
+		-
+			message: '#^Variable method call on \$this\(Vojtechdobes\\GraphQL\\TypeSystem\\GeneratedRegistry\<TItem\>\)\.$#'
+			identifier: method.dynamicName
+			count: 1
+			path: src/GraphQL/TypeSystem/GeneratedRegistry.php
+
+		-
+			message: '#^Variable property access on object\.$#'
+			identifier: property.dynamicName
+			count: 1
+			path: src/GraphQL/TypeSystem/GeneratedRegistryGenerator.php
 
 		-
 			message: '#^Method Vojtechdobes\\GraphQL\\TypeSystem\\Schema\:\:getRootOperationTypeDefinition\(\) should return Vojtechdobes\\GraphQL\\TypeSystem\\ObjectTypeDefinition\|null but returns Vojtechdobes\\GraphQL\\TypeSystem\\TypeDefinition\.$#'

@@ -80,7 +80,7 @@ $executableSchema = new Vojtechdobes\GraphQL\ExecutableSchema(
 );
 
 
-$service = new Vojtechdobes\GraphQL\ServiceFactory()->createService($executableSchema);
+$service = Vojtechdobes\GraphQL\ServiceFactory::createService($executableSchema);
 
 $results = $service->executeRequestBatch($requests)->wait();
 
