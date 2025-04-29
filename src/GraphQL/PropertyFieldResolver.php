@@ -4,7 +4,7 @@ namespace Vojtechdobes\GraphQL;
 
 
 /**
- * @implements FieldResolver<mixed, mixed>
+ * @implements FieldResolver<object, mixed>
  */
 final class PropertyFieldResolver implements FieldResolver
 {

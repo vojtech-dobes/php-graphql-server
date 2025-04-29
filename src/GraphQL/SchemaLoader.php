@@ -51,7 +51,7 @@ final class SchemaLoader
 			}
 
 			foreach ($scalarImplementations as $scalarImplementation) {
-				$key[] = filemtime(new ReflectionClass($scalarImplementation::class)->getFilename());
+				$key[] = filemtime(new ReflectionClass($scalarImplementation::class)->getFileName());
 			}
 		}
 
