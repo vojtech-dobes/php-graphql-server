@@ -43,6 +43,12 @@ parameters:
 			path: src/GraphQL/Execution/OperationExecution.php
 
 		-
+			message: '#^Variable method call on object\.$#'
+			identifier: method.dynamicName
+			count: 1
+			path: src/GraphQL/GetterFieldResolver.php
+
+		-
 			message: '#^Call to __construct\(\) on an existing object is not allowed\.$#'
 			identifier: constructor.call
 			count: 1
