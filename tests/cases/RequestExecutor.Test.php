@@ -76,7 +76,7 @@ $requestExecutor = new Vojtechdobes\GraphQL\RequestExecutor();
 
 $result = $requestExecutor->executeRequest(
 	$executableSchema,
-	new Vojtechdobes\GraphQL\Request($document, $variables),
+	new Vojtechdobes\GraphQL\Request($document, $document->operationDefinitions[0]->name, $variables),
 );
 
 Tester\Assert::equal(

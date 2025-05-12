@@ -11,6 +11,7 @@ final class Request
 	 */
 	public function __construct(
 		public readonly Executable\Document $document,
+		public readonly ?string $operationName,
 		public readonly array $variableValues,
 		public readonly ?bool $enableIntrospection = null,
 	) {}

@@ -12,7 +12,7 @@ $graphQLService = new GraphQL\Service( ... );
 
 $document = $graphQLService->parseExecutableDocument($documentText);
 $result = $graphQLService
-  ->executeRequest(new GraphQL\Request($document, $variables))
+  ->executeRequest(new GraphQL\Request($document, $document->operationDefinitions[0]->name, $variables))
   ->wait();
 ```
 

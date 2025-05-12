@@ -13,31 +13,8 @@ final class RequestExecutor
 		Request $request,
 	): GuzzleHttp\Promise\PromiseInterface
 	{
-		if (count($request->document->operationDefinitions) > 1) {
-			return new GuzzleHttp\Promise\FulfilledPromise(
-				Result::createFromRequestError(
-					new Error("Document with multiple operations can't be executed without selected operation name"),
-				),
-			);
-		}
-
-		return $this->executeOperationInRequest(
-			$executableSchema,
-			$request,
-			$request->document->operationDefinitions[0]->name,
-		);
-	}
-
-
-
-	public function executeOperationInRequest(
-		ExecutableSchema $executableSchema,
-		Request $request,
-		?string $operationName,
-	): GuzzleHttp\Promise\PromiseInterface
-	{
 		try {
-			$operation = $request->document->getOperation($operationName);
+			$operation = $request->document->getOperation($request->operationName);
 		} catch (Exceptions\UnknownOperationException $e) {
 			return new GuzzleHttp\Promise\FulfilledPromise(
 				Result::createFromRequestError(
