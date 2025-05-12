@@ -43,7 +43,7 @@ $requestExecutor = new Vojtechdobes\GraphQL\RequestExecutor();
 
 $result = $requestExecutor->executeRequest(
 	$executableSchema,
-	new Vojtechdobes\GraphQL\Request($document, []),
+	new Vojtechdobes\GraphQL\Request($document, null, []),
 );
 
 Tester\Assert::same(

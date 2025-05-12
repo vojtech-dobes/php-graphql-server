@@ -44,6 +44,7 @@ $requests = [
 		new Vojtechdobes\GraphQL\ExecutableDocumentParser()
 			->parseExecutableDocument($schema, 'query Q($var: String) { a(arg: $var) }')
 			->buildExecutableDocument(),
+		'Q',
 		[
 			'var' => 'A',
 		],
@@ -52,6 +53,7 @@ $requests = [
 		new Vojtechdobes\GraphQL\ExecutableDocumentParser()
 			->parseExecutableDocument($schema, 'query Q($var: String) { b(arg: $var) }')
 			->buildExecutableDocument(),
+		'Q',
 		[
 			'var' => 'B',
 		],
@@ -60,6 +62,7 @@ $requests = [
 		new Vojtechdobes\GraphQL\ExecutableDocumentParser()
 			->parseExecutableDocument($schema, 'query Q($var: String) { c(arg: $var) }')
 			->buildExecutableDocument(),
+		'Q',
 		[
 			'var' => 'C',
 		],

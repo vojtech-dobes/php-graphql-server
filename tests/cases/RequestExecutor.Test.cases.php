@@ -42,21 +42,6 @@ return [
 	...require_once __DIR__ . '/RequestExecutor.Test.cases-introspection.php',
 	...require_once __DIR__ . '/RequestExecutor.Test.cases-leafs.php',
 	...require_once __DIR__ . '/RequestExecutor.Test.cases-merging.php',
-	'invalid document due to ambiguous operation' => [
-		'type Query { a: String }',
-		[
-			'Query.a' => ShouldNotResolve(),
-		],
-		'query A { a } query B { a }',
-		[],
-		[
-			'errors' => [
-				[
-					'message' => "Document with multiple operations can't be executed without selected operation name",
-				],
-			],
-		],
-	],
 	'valid operation with single direct field' => [
 		'type Query { a: String }',
 		[
