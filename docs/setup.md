@@ -20,9 +20,9 @@ Setting up `Service` can be done manually or using an integration for your frame
 
 
 
-## With Nette framework
+## With Nette Framework
 
-The recommended way to use this library together with Nette framework is by also installing [`vojtech-dobes/php-graphql-server-nette-integration`](https://github.com/vojtech-dobes/php-graphql-server-nette-integration?tab=readme-ov-file#nette-integration-for-php-graphql-server) package.
+The recommended way to use this library together with Nette Framework is by also installing [`vojtech-dobes/php-graphql-server-nette-integration`](https://github.com/vojtech-dobes/php-graphql-server-nette-integration?tab=readme-ov-file#nette-integration-for-php-graphql-server) package.
 
 
 
