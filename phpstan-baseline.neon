@@ -31,12 +31,6 @@ parameters:
 			path: src/GraphQL/Execution/OperationExecution.php
 
 		-
-			message: '#^Cannot call method resolveField\(\) on Vojtechdobes\\GraphQL\\FieldResolver\<mixed, mixed, array\<string, mixed\>, mixed\>\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/GraphQL/Execution/OperationExecution.php
-
-		-
 			message: '#^PHPDoc tag @var with type Vojtechdobes\\GraphQL\\TypeSystem\\TypeWithFieldSelection is not subtype of native type Vojtechdobes\\GraphQL\\TypeSystem\\TypeDefinition\.$#'
 			identifier: varTag.nativeType
 			count: 2
