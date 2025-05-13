@@ -6,15 +6,15 @@ namespace Vojtechdobes\GraphQL;
 /**
  * @template TObjectValue
  * @template TResolvedValue
- * @template-covariant TArguments of array<string, mixed> = array{}
- * @template-covariant TContext = null
+ * @template TArguments of array<string, mixed> = array{}
+ * @template TContext = null
  */
 interface FieldResolver
 {
 
 	/**
 	 * @param TObjectValue $objectValue
-	 * @param FieldSelection<contravariant TArguments, contravariant TContext> $field
+	 * @param FieldSelection<TArguments, TContext> $field
 	 * @return TResolvedValue
 	 * @throws Exceptions\FailedToResolveFieldException
 	 */

@@ -5,18 +5,20 @@ namespace Vojtechdobes\GraphQL;
 
 /**
  * @template TResolvedValue
- * @implements FieldResolver<mixed, TResolvedValue>
+ * @template TArguments of array<string, mixed> = array{}
+ * @template TContext = null
+ * @implements FieldResolver<mixed, TResolvedValue, TArguments, TContext>
  */
 final class CallbackFieldResolver implements FieldResolver
 {
 
-	/** @var callable(mixed, FieldSelection): TResolvedValue */
+	/** @var callable(mixed, FieldSelection<TArguments, TContext>): TResolvedValue */
 	private $callback;
 
 
 
 	/**
-	 * @param callable(mixed, FieldSelection): TResolvedValue $callback
+	 * @param callable(mixed, FieldSelection<TArguments, TContext>): TResolvedValue $callback
 	 */
 	public function __construct(
 		callable $callback,

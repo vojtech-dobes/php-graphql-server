@@ -5,6 +5,7 @@ namespace Vojtechdobes\GraphQL\Execution;
 use BackedEnum;
 use Generator;
 use GuzzleHttp;
+use LogicException;
 use Throwable;
 use Vojtechdobes\GraphQL;
 
@@ -15,7 +16,7 @@ final class OperationExecution
 	/** @var GraphQL\FieldResolver<null, covariant GraphQL\TypeSystem\Schema|null> */
 	private readonly GraphQL\FieldResolver $introspectionSchemaResolver;
 
-	/** @var GraphQL\FieldResolver<null, covariant GraphQL\Types\NamedType|null, array{name: string}|array{}> */
+	/** @var GraphQL\FieldResolver<null, covariant GraphQL\Types\NamedType|null, covariant array{name: string}|array{}> */
 	private readonly GraphQL\FieldResolver $introspectionTypeResolver;
 
 
@@ -90,7 +91,12 @@ final class OperationExecution
 					new GraphQL\Types\NonNullType(
 						new GraphQL\Types\NamedType('__Schema'),
 					),
-					$this->introspectionSchemaResolver->resolveField(null, $executionField), // @phpstan-ignore missingType.checkedException
+					$this->executeField(
+						$this->introspectionSchemaResolver,
+						null,
+						$field,
+						$executionField,
+					),
 				);
 
 				continue;
@@ -101,7 +107,12 @@ final class OperationExecution
 					$field,
 					$executionField,
 					new GraphQL\Types\NamedType('__Type'),
-					$this->introspectionTypeResolver->resolveField(null, $executionField), // @phpstan-ignore missingType.checkedException
+					$this->executeField(
+						$this->introspectionTypeResolver,
+						null,
+						$field,
+						$executionField,
+					),
 				);
 
 				$areAllFieldsNotNullable = false;
@@ -113,7 +124,7 @@ final class OperationExecution
 			$fieldType = $objectType->fieldsByName[$field->name]->type;
 
 			$resolvedValue = $this->executeField(
-				$objectType,
+				$this->fieldResolverProvider->getFieldResolver("{$objectType->name}.{$field->name}") ?? throw new LogicException("This can't happen"),
 				$objectValue,
 				$field,
 				$executionField,
@@ -379,17 +390,18 @@ final class OperationExecution
 
 
 
+	/**
+	 * @param GraphQL\FieldResolver<mixed, mixed, covariant array<string, mixed>, mixed> $fieldResolver
+	 */
 	private function executeField(
-		GraphQL\TypeSystem\ObjectTypeDefinition $objectType,
+		GraphQL\FieldResolver $fieldResolver,
 		mixed $objectValue,
 		GraphQL\Executable\Field $field,
 		GraphQL\FieldSelection $executionField,
 	): mixed
 	{
 		try {
-			$value = $this->fieldResolverProvider
-				->getFieldResolver("{$objectType->name}.{$field->name}")
-				->resolveField($objectValue, $executionField);
+			$value = $fieldResolver->resolveField($objectValue, $executionField);
 		} catch (GraphQL\Exceptions\FailedToResolveFieldException $e) {
 			return new ErrorFieldValue(
 				new GraphQL\Error(

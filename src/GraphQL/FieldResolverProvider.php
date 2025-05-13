@@ -14,7 +14,7 @@ interface FieldResolverProvider
 	 * This method is guaranteed to be called only for fields verified to be
 	 * defined in the Schema.
 	 *
-	 * @return FieldResolver<mixed, mixed, array<string, mixed>, mixed>|null
+	 * @return FieldResolver<mixed, mixed, covariant array<string, mixed>, mixed>|null
 	 */
 	function getFieldResolver(string $fieldName): ?FieldResolver;
 

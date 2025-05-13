@@ -7,7 +7,7 @@ final class StaticFieldResolverProvider implements FieldResolverProvider
 {
 
 	/**
-	 * @param array<string, FieldResolver<mixed, mixed, array<string, mixed>>> $fieldResolvers
+	 * @param array<string, FieldResolver<mixed, mixed, covariant array<string, mixed>>> $fieldResolvers
 	 */
 	public function __construct(
 		private readonly array $fieldResolvers,
