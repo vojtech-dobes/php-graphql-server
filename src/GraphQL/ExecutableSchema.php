@@ -69,7 +69,18 @@ final class ExecutableSchema
 				$typeDefinition instanceof TypeSystem\InterfaceTypeDefinition
 				|| $typeDefinition instanceof TypeSystem\UnionTypeDefinition
 			) {
-				if ($this->abstractTypeResolverProvider->hasAbstractTypeResolver($typeDefinition->name) === false) {
+				$requiresResolver = array_any(
+					$this->schema->getTypeDefinitions(),
+					static fn ($aTypeDefinition) => (
+						$aTypeDefinition instanceof TypeSystem\ObjectTypeDefinition
+						&& array_any(
+							$aTypeDefinition->fields,
+							static fn ($fieldDefinition) => $fieldDefinition->type->getNamedType() === $typeDefinition->name,
+						)
+					),
+				);
+
+				if ($requiresResolver && $this->abstractTypeResolverProvider->hasAbstractTypeResolver($typeDefinition->name) === false) {
 					$errors->addErrorMessage(
 						sprintf(
 							"Abstract %s type '%s' doesn't have a resolver",

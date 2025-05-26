@@ -127,9 +127,11 @@ return [
 		[],
 	],
 	'invalid setup with single missing interface type resolver' => [
-		'interface I type Query',
+		'interface I type Query { a: I }',
 		[],
-		[],
+		[
+			'Query.a',
+		],
 		[],
 		[],
 		[
@@ -137,9 +139,13 @@ return [
 		],
 	],
 	'invalid setup with multiple missing interface type resolvers' => [
-		'interface I interface J interface K type Query',
+		'interface I interface J interface K type Query { a: I b: J c: K }',
 		[],
-		[],
+		[
+			'Query.a',
+			'Query.b',
+			'Query.c',
+		],
 		[],
 		[],
 		[
@@ -147,6 +153,22 @@ return [
 			"Abstract interface type 'J' doesn't have a resolver",
 			"Abstract interface type 'K' doesn't have a resolver",
 		],
+	],
+	'valid setup with single missing interface type resolver when interface type is not directly returned' => [
+		'interface I type Query',
+		[],
+		[],
+		[],
+		[],
+		[],
+	],
+	'valid setup with multiple missing interface type resolvers when interface types are not directly returned' => [
+		'interface I interface J interface K type Query',
+		[],
+		[],
+		[],
+		[],
+		[],
 	],
 	'valid setup with single union type' => [
 		'union U type Query',
@@ -171,9 +193,11 @@ return [
 		[],
 	],
 	'invalid setup with single missing union type resolver' => [
-		'union U type Query',
+		'union U type Query { a: U }',
 		[],
-		[],
+		[
+			'Query.a',
+		],
 		[],
 		[],
 		[
@@ -181,9 +205,13 @@ return [
 		],
 	],
 	'invalid setup with multiple missing union type resolvers' => [
-		'union U union V union W type Query',
+		'union U union V union W type Query { a: U b: V c: W }',
 		[],
-		[],
+		[
+			'Query.a',
+			'Query.b',
+			'Query.c',
+		],
 		[],
 		[],
 		[
@@ -191,6 +219,22 @@ return [
 			"Abstract union type 'V' doesn't have a resolver",
 			"Abstract union type 'W' doesn't have a resolver",
 		],
+	],
+	'valid setup with single missing union type resolver when union type is not directly returned' => [
+		'union U type Query',
+		[],
+		[],
+		[],
+		[],
+		[],
+	],
+	'valid setup with multiple missing union type resolvers when union types are not directly returned' => [
+		'union U union V union W type Query',
+		[],
+		[],
+		[],
+		[],
+		[],
 	],
 	'invalid setup with single unknown abstract type resolver' => [
 		'type Query',
