@@ -84,6 +84,26 @@ return [
 			"Field 'X.y' has resolver but doesn't exist in schema",
 		],
 	],
+	'valid setup with field with root query type without resolver' => [
+		'type Query { a: Query }',
+		[],
+		[],
+		[],
+		[],
+		[],
+	],
+	'invalid setup with field with root query type with resolver' => [
+		'type Query { a: Query }',
+		[],
+		[
+			'Query.a',
+		],
+		[],
+		[],
+		[
+			"Field 'Query.a' resolving to root type can't have a resolver",
+		],
+	],
 	'valid setup with single interface type' => [
 		'interface I type Query',
 		[

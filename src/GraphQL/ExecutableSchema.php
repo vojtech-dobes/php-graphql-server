@@ -32,6 +32,7 @@ final class ExecutableSchema
 		$errors = new Errors();
 
 		$fieldResolverProvider = $this->createCompleteFieldResolverProvider();
+		$queryType = $this->schema->rootOperationTypes[OperationType::Query->value];
 
 		$knownFieldNames = [];
 
@@ -41,6 +42,19 @@ final class ExecutableSchema
 					$fieldName = "{$typeDefinition->name}.{$fieldDefinition->name}";
 
 					$knownFieldNames[] = $fieldName;
+
+					if ($fieldDefinition->type->getNamedType() === $queryType) {
+						if ($fieldResolverProvider->hasFieldResolver($fieldName)) {
+							$errors->addErrorMessage(
+								sprintf(
+									"Field '%s' resolving to root type can't have a resolver",
+									$fieldName,
+								),
+							);
+						}
+
+						continue;
+					}
 
 					if ($fieldResolverProvider->hasFieldResolver($fieldName) === false) {
 						$errors->addErrorMessage(
