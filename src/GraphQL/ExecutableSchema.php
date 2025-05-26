@@ -32,6 +32,7 @@ final class ExecutableSchema
 		$errors = new Errors();
 
 		$fieldResolverProvider = $this->createCompleteFieldResolverProvider();
+		$queryType = $this->schema->rootOperationTypes[OperationType::Query->value];
 
 		$knownFieldNames = [];
 
@@ -41,6 +42,19 @@ final class ExecutableSchema
 					$fieldName = "{$typeDefinition->name}.{$fieldDefinition->name}";
 
 					$knownFieldNames[] = $fieldName;
+
+					if ($fieldDefinition->type->getNamedType() === $queryType) {
+						if ($fieldResolverProvider->hasFieldResolver($fieldName)) {
+							$errors->addErrorMessage(
+								sprintf(
+									"Field '%s' resolving to root type can't have a resolver",
+									$fieldName,
+								),
+							);
+						}
+
+						continue;
+					}
 
 					if ($fieldResolverProvider->hasFieldResolver($fieldName) === false) {
 						$errors->addErrorMessage(
@@ -55,7 +69,18 @@ final class ExecutableSchema
 				$typeDefinition instanceof TypeSystem\InterfaceTypeDefinition
 				|| $typeDefinition instanceof TypeSystem\UnionTypeDefinition
 			) {
-				if ($this->abstractTypeResolverProvider->hasAbstractTypeResolver($typeDefinition->name) === false) {
+				$requiresResolver = array_any(
+					$this->schema->getTypeDefinitions(),
+					static fn ($aTypeDefinition) => (
+						$aTypeDefinition instanceof TypeSystem\ObjectTypeDefinition
+						&& array_any(
+							$aTypeDefinition->fields,
+							static fn ($fieldDefinition) => $fieldDefinition->type->getNamedType() === $typeDefinition->name,
+						)
+					),
+				);
+
+				if ($requiresResolver && $this->abstractTypeResolverProvider->hasAbstractTypeResolver($typeDefinition->name) === false) {
 					$errors->addErrorMessage(
 						sprintf(
 							"Abstract %s type '%s' doesn't have a resolver",
