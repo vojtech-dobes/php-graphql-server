@@ -29,6 +29,20 @@ final class Deferred
 
 
 	/**
+	 * @template TChainValue
+	 * @param callable(TValue): TChainValue $callback
+	 * @return self<TChainValue>
+	 */
+	public function chain(callable $callback): self
+	{
+		return new Deferred(
+			fn () => $callback($this->createPromise()->wait()),
+		);
+	}
+
+
+
+	/**
 	 * @return TValue
 	 */
 	public function execute(): mixed
