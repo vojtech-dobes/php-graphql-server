@@ -14,6 +14,8 @@ final class Deferred
 	/** @var callable(): TValue */
 	private $callback;
 
+	private ?GuzzleHttp\Promise\Promise $promise = null;
+
 
 
 	/**
@@ -22,6 +24,20 @@ final class Deferred
 	public function __construct(callable $callback)
 	{
 		$this->callback = $callback;
+	}
+
+
+
+	/**
+	 * @template TChainValue
+	 * @param callable(TValue): TChainValue $callback
+	 * @return self<TChainValue>
+	 */
+	public function chain(callable $callback): self
+	{
+		return new Deferred(
+			fn () => $callback($this->createPromise()->wait()),
+		);
 	}
 
 
@@ -38,15 +54,15 @@ final class Deferred
 
 	public function createPromise(): GuzzleHttp\Promise\Promise
 	{
-		$promise = new GuzzleHttp\Promise\Promise(
-			function () use (& $promise): void {
-				$promise->resolve(
+		$this->promise ??= new GuzzleHttp\Promise\Promise(
+			function (): void {
+				$this->promise->resolve(
 					$this->execute(),
 				);
 			},
 		);
 
-		return $promise;
+		return $this->promise;
 	}
 
 }
