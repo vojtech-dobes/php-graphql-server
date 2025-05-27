@@ -14,6 +14,8 @@ final class Deferred
 	/** @var callable(): TValue */
 	private $callback;
 
+	private ?GuzzleHttp\Promise\Promise $promise = null;
+
 
 
 	/**
@@ -38,15 +40,15 @@ final class Deferred
 
 	public function createPromise(): GuzzleHttp\Promise\Promise
 	{
-		$promise = new GuzzleHttp\Promise\Promise(
-			function () use (& $promise): void {
-				$promise->resolve(
+		$this->promise ??= new GuzzleHttp\Promise\Promise(
+			function (): void {
+				$this->promise->resolve(
 					$this->execute(),
 				);
 			},
 		);
 
-		return $promise;
+		return $this->promise;
 	}
 
 }
