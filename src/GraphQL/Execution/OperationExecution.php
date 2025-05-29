@@ -19,6 +19,8 @@ final class OperationExecution
 	/** @var GraphQL\FieldResolver<null, covariant GraphQL\Types\NamedType|null, covariant array{name: string}|array{}> */
 	private readonly GraphQL\FieldResolver $introspectionTypeResolver;
 
+	private readonly string $queryType;
+
 
 
 	/**
@@ -44,6 +46,8 @@ final class OperationExecution
 			$this->introspectionSchemaResolver = $resolver;
 			$this->introspectionTypeResolver = $resolver;
 		}
+
+		$this->queryType = $schema->rootOperationTypes[GraphQL\OperationType::Query->value];
 	}
 
 
@@ -124,7 +128,9 @@ final class OperationExecution
 			$fieldType = $objectType->fieldsByName[$field->name]->type;
 
 			$resolvedValue = $this->executeField(
-				$this->fieldResolverProvider->getFieldResolver("{$objectType->name}.{$field->name}") ?? throw new LogicException("This can't happen"),
+				$fieldType->getNamedType() === $this->queryType
+					? new GraphQL\CallbackFieldResolver(static fn () => [])
+					: $this->fieldResolverProvider->getFieldResolver("{$objectType->name}.{$field->name}") ?? throw new LogicException("This can't happen"),
 				$objectValue,
 				$field,
 				$executionField,
