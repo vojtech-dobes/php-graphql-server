@@ -8,7 +8,7 @@ use Vojtechdobes\GraphQL;
 /**
  * @implements GraphQL\FieldResolver<
  *   GraphQL\TypeSystem\Schema,
- *   GraphQL\TypeSystem\ObjectTypeDefinition|null,
+ *   GraphQL\Types\NamedType|null,
  * >
  */
 final class SchemaRootOperationTypeFieldResolver implements GraphQL\FieldResolver
@@ -22,7 +22,13 @@ final class SchemaRootOperationTypeFieldResolver implements GraphQL\FieldResolve
 
 	public function resolveField(mixed $objectValue, GraphQL\FieldSelection $field): mixed
 	{
-		return $objectValue->getRootOperationTypeDefinition($this->operationType);
+		$rootTypeDefinition = $objectValue->getRootOperationTypeDefinition($this->operationType);
+
+		if ($rootTypeDefinition === null) {
+			return null;
+		}
+
+		return new GraphQL\Types\NamedType($rootTypeDefinition->name);
 	}
 
 }
