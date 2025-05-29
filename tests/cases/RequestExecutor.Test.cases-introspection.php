@@ -81,7 +81,7 @@ return [
 						],
 					],
 					'mutationType' => null,
-					'queryType' => ['name' => null],
+					'queryType' => ['name' => 'Query'],
 					'subscriptionType' => null,
 					'types' => [
 						[
