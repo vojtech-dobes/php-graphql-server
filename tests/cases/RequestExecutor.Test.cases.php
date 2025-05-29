@@ -42,6 +42,7 @@ return [
 	...require_once __DIR__ . '/RequestExecutor.Test.cases-introspection.php',
 	...require_once __DIR__ . '/RequestExecutor.Test.cases-leafs.php',
 	...require_once __DIR__ . '/RequestExecutor.Test.cases-merging.php',
+	...require_once __DIR__ . '/RequestExecutor.Test.cases-rootTypeField.php',
 	'valid operation with single direct field' => [
 		'type Query { a: String }',
 		[
