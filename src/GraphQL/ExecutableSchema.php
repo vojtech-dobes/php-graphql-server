@@ -56,7 +56,10 @@ final class ExecutableSchema
 						continue;
 					}
 
-					if ($fieldResolverProvider->hasFieldResolver($fieldName) === false) {
+					if (
+						$fieldResolverProvider->hasFieldResolver($fieldName) === false
+						&& $fieldResolverProvider->hasFieldResolver("{$typeDefinition->name}.*") === false
+					) {
 						$errors->addErrorMessage(
 							sprintf(
 								"Field '%s' doesn't have a resolver",
@@ -108,7 +111,24 @@ final class ExecutableSchema
 		}
 
 		foreach ($fieldResolverProvider->listSupportedFieldNames() as $fieldName) {
-			if (in_array($fieldName, $knownFieldNames, true) === false) {
+			if (str_ends_with($fieldName, '.*')) {
+				$typeDefinition = $this->schema->getTypeDefinition(substr($fieldName, 0, -2));
+
+				if (
+					$typeDefinition instanceof TypeSystem\ObjectTypeDefinition
+					&& array_all(
+						$typeDefinition->fields,
+						static fn ($fieldDefinition) => $fieldResolverProvider->hasFieldResolver("{$typeDefinition->name}.{$fieldDefinition->name}"),
+					)
+				) {
+					$errors->addErrorMessage(
+						sprintf(
+							"Type '%s' has unused wildcard field resolver",
+							$typeDefinition->name,
+						),
+					);
+				}
+			} elseif (in_array($fieldName, $knownFieldNames, true) === false) {
 				$errors->addErrorMessage(
 					sprintf(
 						"Field '%s' has resolver but doesn't exist in schema",
