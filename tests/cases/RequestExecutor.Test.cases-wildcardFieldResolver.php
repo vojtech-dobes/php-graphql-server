@@ -4,7 +4,7 @@ return [
 	'field with wildcard field resolver resolves' => [
 		'type Query { a: String }',
 		[
-			'Query.*' => 'Dude',
+			'Query' => 'Dude',
 		],
 		'query { a }',
 		[],
@@ -18,7 +18,7 @@ return [
 		'type Query { a: String b: String c: String }',
 		[
 			'Query.a' => 'Alice',
-			'Query.*' => 'Dude',
+			'Query' => 'Dude',
 		],
 		'query { a b c }',
 		[],

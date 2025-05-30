@@ -58,7 +58,7 @@ final class ExecutableSchema
 
 					if (
 						$fieldResolverProvider->hasFieldResolver($fieldName) === false
-						&& $fieldResolverProvider->hasFieldResolver("{$typeDefinition->name}.*") === false
+						&& $fieldResolverProvider->hasFieldResolver($typeDefinition->name) === false
 					) {
 						$errors->addErrorMessage(
 							sprintf(
@@ -111,8 +111,8 @@ final class ExecutableSchema
 		}
 
 		foreach ($fieldResolverProvider->listSupportedFieldNames() as $fieldName) {
-			if (str_ends_with($fieldName, '.*')) {
-				$typeDefinition = $this->schema->getTypeDefinition(substr($fieldName, 0, -2));
+			if (str_contains($fieldName, '.') === false) {
+				$typeDefinition = $this->schema->getTypeDefinition($fieldName);
 
 				if (
 					$typeDefinition instanceof TypeSystem\ObjectTypeDefinition
