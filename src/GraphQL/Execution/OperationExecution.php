@@ -220,7 +220,7 @@ final class OperationExecution
 
 		return (
 			$this->fieldResolverProvider->getFieldResolver("{$objectType->name}.{$fieldName}")
-			?? $this->fieldResolverProvider->getFieldResolver("{$objectType->name}.*")
+			?? $this->fieldResolverProvider->getFieldResolver($objectType->name)
 			?? throw new LogicException("This can't happen")
 		);
 	}

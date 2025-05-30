@@ -108,7 +108,7 @@ return [
 		'type Query { a: String }',
 		[],
 		[
-			'Query.*',
+			'Query',
 		],
 		[],
 		[],
@@ -118,7 +118,7 @@ return [
 		'type Query { a: String b: String c: String }',
 		[],
 		[
-			'Query.*',
+			'Query',
 		],
 		[],
 		[],
@@ -129,7 +129,7 @@ return [
 		[],
 		[
 			'Query.a',
-			'Query.*',
+			'Query',
 		],
 		[],
 		[],
@@ -140,7 +140,7 @@ return [
 		[],
 		[
 			'Query.b',
-			'Query.*',
+			'Query',
 		],
 		[],
 		[],
@@ -153,7 +153,7 @@ return [
 		[],
 		[
 			'Query.a',
-			'Query.*',
+			'Query',
 		],
 		[],
 		[],
