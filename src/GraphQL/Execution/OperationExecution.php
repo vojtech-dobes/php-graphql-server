@@ -128,9 +128,7 @@ final class OperationExecution
 			$fieldType = $objectType->fieldsByName[$field->name]->type;
 
 			$resolvedValue = $this->executeField(
-				$fieldType->getNamedType() === $this->queryType
-					? new GraphQL\CallbackFieldResolver(static fn () => [])
-					: $this->fieldResolverProvider->getFieldResolver("{$objectType->name}.{$field->name}") ?? throw new LogicException("This can't happen"),
+				$this->getFieldResolver($objectType, $field->name, $fieldType),
 				$objectValue,
 				$field,
 				$executionField,
@@ -202,6 +200,28 @@ final class OperationExecution
 					),
 				),
 			),
+		);
+	}
+
+
+
+	/**
+	 * @return GraphQL\FieldResolver<mixed, mixed, covariant array<string, mixed>, mixed>
+	 */
+	private function getFieldResolver(
+		GraphQL\TypeSystem\ObjectTypeDefinition $objectType,
+		string $fieldName,
+		GraphQL\Types\Type $fieldType,
+	): GraphQL\FieldResolver
+	{
+		if ($fieldType->getNamedType() === $this->queryType) {
+			return new GraphQL\CallbackFieldResolver(static fn () => []);
+		}
+
+		return (
+			$this->fieldResolverProvider->getFieldResolver("{$objectType->name}.{$fieldName}")
+			?? $this->fieldResolverProvider->getFieldResolver("{$objectType->name}.*")
+			?? throw new LogicException("This can't happen")
 		);
 	}
 

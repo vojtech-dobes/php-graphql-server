@@ -104,6 +104,63 @@ return [
 			"Field 'Query.a' resolving to root type can't have a resolver",
 		],
 	],
+	'valid setup with single field with wildcard field resolver' => [
+		'type Query { a: String }',
+		[],
+		[
+			'Query.*',
+		],
+		[],
+		[],
+		[],
+	],
+	'valid setup with multiple fields with wildcard field resolver' => [
+		'type Query { a: String b: String c: String }',
+		[],
+		[
+			'Query.*',
+		],
+		[],
+		[],
+		[],
+	],
+	'valid setup with mix of fields with field resolver and wildcard field resolver' => [
+		'type Query { a: String b: String c: String }',
+		[],
+		[
+			'Query.a',
+			'Query.*',
+		],
+		[],
+		[],
+		[],
+	],
+	'invalid setup with unknown field resolver in presence of wildcard field resolver' => [
+		'type Query { a: String }',
+		[],
+		[
+			'Query.b',
+			'Query.*',
+		],
+		[],
+		[],
+		[
+			"Field 'Query.b' has resolver but doesn't exist in schema",
+		],
+	],
+	'invalid setup with unused wildcard field resolver' => [
+		'type Query { a: String }',
+		[],
+		[
+			'Query.a',
+			'Query.*',
+		],
+		[],
+		[],
+		[
+			"Type 'Query' has unused wildcard field resolver",
+		],
+	],
 	'valid setup with single interface type' => [
 		'interface I type Query',
 		[
