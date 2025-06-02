@@ -40,6 +40,21 @@ final class CombinedFieldResolverProvider implements FieldResolverProvider
 
 
 
+	public function getFieldResolverClass(string $fieldName): ?string
+	{
+		foreach ($this->fieldResolverProviders as $fieldResolverProvider) {
+			$fieldResolverClass = $fieldResolverProvider->getFieldResolverClass($fieldName);
+
+			if ($fieldResolverClass !== null) {
+				return $fieldResolverClass;
+			}
+		}
+
+		return null;
+	}
+
+
+
 	public function listSupportedFieldNames(): array
 	{
 		return array_merge(

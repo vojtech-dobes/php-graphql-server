@@ -42,3 +42,18 @@ Tester\Assert::same(
 Tester\Assert::null(
 	$combinedFieldResolverProvider->getFieldResolver('c'),
 );
+
+
+Tester\Assert::same(
+	Vojtechdobes\GraphQL\CallbackFieldResolver::class,
+	$combinedFieldResolverProvider->getFieldResolverClass('a'),
+);
+
+Tester\Assert::same(
+	Vojtechdobes\GraphQL\CallbackFieldResolver::class,
+	$combinedFieldResolverProvider->getFieldResolverClass('b'),
+);
+
+Tester\Assert::null(
+	$combinedFieldResolverProvider->getFieldResolverClass('c'),
+);

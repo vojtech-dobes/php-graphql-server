@@ -21,6 +21,13 @@ interface FieldResolverProvider
 
 
 	/**
+	 * @return class-string<FieldResolver<mixed, mixed, covariant array<string, mixed>>>|null
+	 */
+	function getFieldResolverClass(string $fieldName): ?string;
+
+
+
+	/**
 	 * This method is only called in validation context. Therefore an optimized
 	 * implementation doesn't have to support it if ExecutableSchema::validate()
 	 * won't be called with it.

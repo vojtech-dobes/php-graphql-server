@@ -29,6 +29,17 @@ final class StaticFieldResolverProvider implements FieldResolverProvider
 
 
 
+	public function getFieldResolverClass(string $fieldName): ?string
+	{
+		if (array_key_exists($fieldName, $this->fieldResolvers)) {
+			return $this->fieldResolvers[$fieldName]::class;
+		}
+
+		return null;
+	}
+
+
+
 	public function listSupportedFieldNames(): array
 	{
 		return array_keys($this->fieldResolvers);
