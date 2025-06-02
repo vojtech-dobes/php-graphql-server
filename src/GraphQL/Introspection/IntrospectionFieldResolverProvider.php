@@ -76,6 +76,17 @@ final class IntrospectionFieldResolverProvider implements GraphQL\FieldResolverP
 
 
 
+	public function getFieldResolverClass(string $fieldName): ?string
+	{
+		if ($this->hasFieldResolver($fieldName) === false) {
+			return null;
+		}
+
+		return $this->fieldResolverProvider->getFieldResolverClass($fieldName);
+	}
+
+
+
 	public function listSupportedFieldNames(): array
 	{
 		return $this->fieldResolverProvider->listSupportedFieldNames();
