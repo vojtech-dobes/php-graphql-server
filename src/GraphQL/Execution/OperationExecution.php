@@ -397,6 +397,7 @@ final class OperationExecution
 			arguments: $arguments,
 			context: $this->context,
 			field: $field,
+			objectType: $objectTypeDefinition,
 			selectionSet: array_merge(...$mergedSelectionSet),
 		);
 	}

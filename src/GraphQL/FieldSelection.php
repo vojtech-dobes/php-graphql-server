@@ -29,6 +29,7 @@ final class FieldSelection
 		public readonly array $arguments,
 		public readonly mixed $context,
 		private readonly Executable\Field $field,
+		public readonly TypeSystem\ObjectTypeDefinition $objectType,
 		public readonly array $selectionSet,
 	) {}
 
