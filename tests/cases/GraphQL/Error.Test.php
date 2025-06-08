@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../bootstrap.php';
 Tester\Environment::setupFunctions();
 
 
-test('Error with message', function () {
+test('Error with message', static function () {
 	$error = new Vojtechdobes\GraphQL\Error(
 		'Something bad happened',
 	);
@@ -19,7 +19,7 @@ test('Error with message', function () {
 });
 
 
-test('Error with message and path', function () {
+test('Error with message and path', static function () {
 	$error = new Vojtechdobes\GraphQL\Error(
 		'Something bad happened',
 		Vojtechdobes\GraphQL\Execution\ResponsePath::createBasePath()
@@ -38,7 +38,7 @@ test('Error with message and path', function () {
 });
 
 
-test('Error with message and path and extensions', function () {
+test('Error with message and path and extensions', static function () {
 	$error = new Vojtechdobes\GraphQL\Error(
 		'Something bad happened',
 		Vojtechdobes\GraphQL\Execution\ResponsePath::createBasePath()
@@ -63,7 +63,7 @@ test('Error with message and path and extensions', function () {
 });
 
 
-test('Error with message and extensions', function () {
+test('Error with message and extensions', static function () {
 	$error = new Vojtechdobes\GraphQL\Error(
 		'Something bad happened',
 		null,
@@ -84,7 +84,7 @@ test('Error with message and extensions', function () {
 });
 
 
-test('Error with message and path being added later', function () {
+test('Error with message and path being added later', static function () {
 	$error = new Vojtechdobes\GraphQL\Error(
 		'Something bad happened',
 	)->withResponsePath(

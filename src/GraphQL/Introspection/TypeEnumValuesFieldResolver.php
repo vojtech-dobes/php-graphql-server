@@ -42,7 +42,7 @@ final class TypeEnumValuesFieldResolver implements GraphQL\FieldResolver
 			$result = array_values(
 				array_filter(
 					$result,
-					function (GraphQL\TypeSystem\EnumValueDefinition $enumValueDefinition): bool {
+					static function (GraphQL\TypeSystem\EnumValueDefinition $enumValueDefinition): bool {
 						foreach ($enumValueDefinition->directives as $directive) {
 							if ($directive->name === 'deprecated') {
 								return false;

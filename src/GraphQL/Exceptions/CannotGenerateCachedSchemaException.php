@@ -7,4 +7,5 @@ use RuntimeException;
 
 final class CannotGenerateCachedSchemaException extends RuntimeException
 {
+
 }

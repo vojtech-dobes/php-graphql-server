@@ -1,7 +1,14 @@
 <?php declare(strict_types=1);
 
-enum MyEnumClass: string {}
-enum NotBackedEnumClass {}
+enum MyEnumClass: string
+{
+
+}
+
+enum NotBackedEnumClass
+{
+
+}
 
 return [
 	'valid setup with no fields' => [

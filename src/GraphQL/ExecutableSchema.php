@@ -2,10 +2,6 @@
 
 namespace Vojtechdobes\GraphQL;
 
-use BackedEnum;
-use Generator;
-use Throwable;
-
 
 final class ExecutableSchema
 {

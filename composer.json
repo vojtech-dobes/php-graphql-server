@@ -11,6 +11,9 @@
 		}
 	},
 	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": false
+		},
 		"sort-packages": true
 	},
 	"keywords": [
@@ -36,9 +39,11 @@
 		"phpstan/phpstan-strict-rules": "^2.0.4",
 		"psr/log": "^3.0",
 		"spaze/phpstan-disallowed-calls": "^4.5.0",
-		"tracy/tracy": "^2.10.9"
+		"tracy/tracy": "^2.10.9",
+		"vojtech-dobes/php-codestyle": "~0.2.0"
 	},
 	"scripts": {
+		"fmt": "phpcbf",
 		"lint": "parallel-lint src tests",
 		"phpstan": "phpstan analyse --memory-limit 256M",
 		"test": "composer dump-autoload && tester tests -o console-lines --cider --setup=tests/setup.php -C"

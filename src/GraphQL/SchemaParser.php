@@ -3,8 +3,6 @@
 namespace Vojtechdobes\GraphQL;
 
 use BackedEnum;
-use LogicException;
-use Vojtechdobes\GrammarProcessing;
 
 
 final class SchemaParser

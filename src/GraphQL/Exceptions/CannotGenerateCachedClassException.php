@@ -7,4 +7,5 @@ use RuntimeException;
 
 final class CannotGenerateCachedClassException extends RuntimeException
 {
+
 }

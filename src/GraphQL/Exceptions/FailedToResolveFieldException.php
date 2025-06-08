@@ -3,7 +3,6 @@
 namespace Vojtechdobes\GraphQL\Exceptions;
 
 use RuntimeException;
-use Throwable;
 
 
 final class FailedToResolveFieldException extends RuntimeException

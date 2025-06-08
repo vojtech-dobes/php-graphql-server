@@ -15,8 +15,8 @@ final class BooleanValue implements GrammarProcessing\NodeInterpretation
 		return new GraphQL\Values\BooleanValue(
 			// @phpstan-ignore match.unhandled ($node is already guaranteed to be only "true" or "false")
 			match (yield $node) {
-				'true' => TRUE,
-				'false' => FALSE,
+				'true' => true,
+				'false' => false,
 			},
 		);
 	}

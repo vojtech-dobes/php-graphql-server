@@ -7,4 +7,5 @@ use RuntimeException;
 
 final class CannotParseScalarRuntimeValueException extends RuntimeException
 {
+
 }

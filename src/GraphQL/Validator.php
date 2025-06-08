@@ -134,7 +134,7 @@ final class Validator
 
 				$errors->addErrorMessage(
 					sprintf(
-						"%s must be %s, but no value given",
+						'%s must be %s, but no value given',
 						$argumentLocation,
 						$argumentDefinition->type->format(),
 					),
@@ -394,7 +394,7 @@ final class Validator
 			return;
 		}
 
-		if ($typeDefinition->kind->isInputType() === FALSE) {
+		if ($typeDefinition->kind->isInputType() === false) {
 			$errors->addErrorMessage(
 				sprintf(
 					"%s must have input type, but %s type '%s' given",
@@ -429,7 +429,7 @@ final class Validator
 			return;
 		}
 
-		if ($typeDefinition->kind->isOutputType() === FALSE) {
+		if ($typeDefinition->kind->isOutputType() === false) {
 			$errors->addErrorMessage(
 				sprintf(
 					"%s must have output type, but %s type '%s' given",
@@ -553,7 +553,7 @@ final class Validator
 		);
 
 		foreach ($actualValue->fields as $inputField) {
-			if (in_array($inputField->name, $supportedFields, TRUE) === FALSE) {
+			if (in_array($inputField->name, $supportedFields, true) === false) {
 				$errors->addErrorMessage(
 					sprintf(
 						"%s with input object type '%s' doesn't recognize field '%s'",
@@ -607,7 +607,7 @@ final class Validator
 		if (!$actualValue instanceof Values\ListValue) {
 			$errors->addErrorMessage(
 				sprintf(
-					"%s must be %s, but %s value given",
+					'%s must be %s, but %s value given',
 					$location,
 					$expectedType->format(),
 					$actualValue->getLabel(),
@@ -685,7 +685,7 @@ final class Validator
 		if ($actualValue instanceof Values\NullValue) {
 			$errors->addErrorMessage(
 				sprintf(
-					"%s must be %s, but %s value given",
+					'%s must be %s, but %s value given',
 					$location,
 					$expectedType->format(),
 					$actualValue->getLabel(),
@@ -723,7 +723,7 @@ final class Validator
 		} catch (Exceptions\CannotParseScalarLiteralValueException $e) {
 			$errors->addErrorMessage(
 				sprintf(
-					"%s %s",
+					'%s %s',
 					$location,
 					$e->getMessage() !== ''
 						? 'is invalid: ' . $e->getMessage()

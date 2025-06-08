@@ -50,7 +50,7 @@ final class TypePossibleTypesFieldResolver implements GraphQL\FieldResolver
 			return $result;
 		} elseif ($typeDefinition instanceof GraphQL\TypeSystem\UnionTypeDefinition) {
 			return array_map(
-				fn ($possibleType) => new GraphQL\Types\NamedType($possibleType),
+				static fn ($possibleType) => new GraphQL\Types\NamedType($possibleType),
 				$typeDefinition->possibleTypes,
 			);
 		}

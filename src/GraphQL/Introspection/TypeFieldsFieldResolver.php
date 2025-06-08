@@ -45,7 +45,7 @@ final class TypeFieldsFieldResolver implements GraphQL\FieldResolver
 			$result = array_values(
 				array_filter(
 					$result,
-					function (GraphQL\TypeSystem\FieldDefinition $fieldDefinition): bool {
+					static function (GraphQL\TypeSystem\FieldDefinition $fieldDefinition): bool {
 						foreach ($fieldDefinition->directives as $directive) {
 							if ($directive->name === 'deprecated') {
 								return false;

@@ -34,8 +34,8 @@ final class NonNullFieldValue implements FieldValue
 			$fieldErrors->addError(
 				new GraphQL\Error(
 					is_string($responsePath->segment)
-						? "Non-nullable field resolved to null"
-						: "Non-nullable item resolved to null",
+						? 'Non-nullable field resolved to null'
+						: 'Non-nullable item resolved to null',
 					responsePath: $responsePath,
 				),
 			);
