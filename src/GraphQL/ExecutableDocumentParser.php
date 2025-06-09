@@ -2,9 +2,6 @@
 
 namespace Vojtechdobes\GraphQL;
 
-use LogicException;
-use Vojtechdobes\GrammarProcessing;
-
 
 final class ExecutableDocumentParser
 {
@@ -37,7 +34,7 @@ final class ExecutableDocumentParser
 		}
 
 		foreach ($definitions as $definition) {
-			match (TRUE) {
+			match (true) {
 				$definition instanceof Executable\FragmentDefinition => $executableDocumentBuilder->addFragmentDefinition($definition),
 				$definition instanceof Executable\OperationDefinition => $executableDocumentBuilder->addOperationDefinition($definition),
 			};

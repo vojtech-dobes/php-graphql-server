@@ -3,9 +3,9 @@
 namespace Vojtechdobes\GraphQL\Execution;
 
 use RuntimeException;
-use Vojtechdobes\GraphQL;
 
 
 final class CannotResolveVariableRuntimeValueException extends RuntimeException
 {
+
 }

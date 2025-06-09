@@ -59,4 +59,5 @@ abstract class GeneratedRegistry implements Registry
 
 		return $this->all;
 	}
+
 }

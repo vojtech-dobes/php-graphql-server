@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset>
+	<config name="installed_paths" value="vendor/vojtech-dobes/php-codestyle" />
+
+	<file>src</file>
+	<file>tests</file>
+
+	<rule ref="Vojtechdobes" />
+
+	<rule ref="SlevomatCodingStandard.Classes.MethodSpacing">
+		<properties>
+			<property name="minLinesCount" value="1" />
+			<property name="maxLinesCount" value="1" />
+		</properties>
+
+		<include-pattern>*/tests/cases/*</include-pattern>
+	</rule>
+</ruleset>

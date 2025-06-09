@@ -2,9 +2,6 @@
 
 namespace Vojtechdobes\GraphQL;
 
-use LogicException;
-use Vojtechdobes\GrammarProcessing;
-
 
 final class ExecutableDocumentBuilder
 {
@@ -156,7 +153,7 @@ final class ExecutableDocumentBuilder
 		$this->validator->validateDirectives(
 			$this->errors,
 			[],
-			"Fragment '$fragmentDefinition->name'",
+			"Fragment '{$fragmentDefinition->name}'",
 			Spec\ExecutableDirectiveLocation::FragmentDefinition,
 			$fragmentDefinition->directives,
 		);
@@ -222,7 +219,7 @@ final class ExecutableDocumentBuilder
 
 				$this->validator->validateValue(
 					$this->errors,
-					sprintf("Default value of %s", lcfirst($variableDefinitionLocation)),
+					sprintf('Default value of %s', lcfirst($variableDefinitionLocation)),
 					$variableDefinition->type,
 					$variableDefinition->defaultValue,
 				);
@@ -591,7 +588,7 @@ final class ExecutableDocumentBuilder
 		$this->validator->validateDirectives(
 			$this->errors,
 			$variableDefinitions,
-			sprintf("Inline fragment on %s", lcfirst($location)),
+			sprintf('Inline fragment on %s', lcfirst($location)),
 			Spec\ExecutableDirectiveLocation::InlineFragment,
 			$inlineFragment->directives,
 		);

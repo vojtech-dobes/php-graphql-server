@@ -45,7 +45,7 @@ final class GrammarFactory
 				new GrammarProcessing\Vocabulary\Regexp('\x{000A}'),
 				new GrammarProcessing\Vocabulary\Sequence([
 					new GrammarProcessing\Vocabulary\Regexp('\x{000D}'),
-					new GrammarProcessing\Vocabulary\NegativeLookahead(new GrammarProcessing\Vocabulary\Regexp('\x{000A}'))
+					new GrammarProcessing\Vocabulary\NegativeLookahead(new GrammarProcessing\Vocabulary\Regexp('\x{000A}')),
 				]),
 				new GrammarProcessing\Vocabulary\Sequence([
 					new GrammarProcessing\Vocabulary\Regexp('\x{000D}'),

@@ -5,4 +5,5 @@ namespace Vojtechdobes\GraphQL\Exceptions;
 
 final class InconsistentExecutableDocumentException extends InvalidExecutableDocumentException
 {
+
 }

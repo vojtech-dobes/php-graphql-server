@@ -12,7 +12,7 @@ final class GeneratedRegistryGenerator
 {
 
 	/** @var array<string, list<ReflectionParameter>> */
-	private $parametersPerClass = [];
+	private array $parametersPerClass = [];
 
 
 

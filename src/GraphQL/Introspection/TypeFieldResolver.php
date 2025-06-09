@@ -27,7 +27,6 @@ final class TypeFieldResolver implements GraphQL\FieldResolver
 	{
 		$typeName = $field->arguments['name'];
 
-
 		if ($this->schema->getTypeDefinitionOrNull($typeName) === null) {
 			return null;
 		}

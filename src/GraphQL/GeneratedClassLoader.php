@@ -2,8 +2,6 @@
 
 namespace Vojtechdobes\GraphQL;
 
-use Nette;
-use ReflectionClass;
 use Stringable;
 
 

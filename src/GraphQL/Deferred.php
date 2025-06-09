@@ -12,7 +12,7 @@ final class Deferred
 {
 
 	/** @var callable(): TValue */
-	private $callback;
+	private mixed $callback;
 
 	private ?GuzzleHttp\Promise\Promise $promise = null;
 

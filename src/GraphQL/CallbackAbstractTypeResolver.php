@@ -10,7 +10,7 @@ final class CallbackAbstractTypeResolver implements AbstractTypeResolver
 {
 
 	/** @var callable(mixed): string */
-	private $callback;
+	private mixed $callback;
 
 
 

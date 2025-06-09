@@ -519,7 +519,7 @@ final class SchemaBuilder
 			);
 
 			$this->validateName(
-				sprintf("Argument of %s", lcfirst($location)),
+				sprintf('Argument of %s', lcfirst($location)),
 				$argumentDefinition->name,
 			);
 
@@ -532,7 +532,7 @@ final class SchemaBuilder
 			if ($argumentDefinition->defaultValue !== null) {
 				$this->validator->validateValue(
 					$this->errors,
-					sprintf("Default value of %s", lcfirst($argumentLocation)),
+					sprintf('Default value of %s', lcfirst($argumentLocation)),
 					$argumentDefinition->type,
 					$argumentDefinition->defaultValue,
 				);
@@ -675,7 +675,7 @@ final class SchemaBuilder
 	{
 		foreach ($this->directiveDefinitions as $directiveDefinition) {
 			$this->validateName(
-				"Directive",
+				'Directive',
 				$directiveDefinition->name,
 			);
 
@@ -727,7 +727,7 @@ final class SchemaBuilder
 	{
 		foreach ($this->typesEnum as $enumTypeDefinition) {
 			$this->validateName(
-				"Enum type",
+				'Enum type',
 				$enumTypeDefinition->name,
 			);
 
@@ -899,7 +899,7 @@ final class SchemaBuilder
 				if ($inputFieldDefinition->defaultValue !== null) {
 					$this->validator->validateValue(
 						$this->errors,
-						sprintf("Default value of %s", lcfirst($inputFieldLocation)),
+						sprintf('Default value of %s', lcfirst($inputFieldLocation)),
 						$inputFieldDefinition->type,
 						$inputFieldDefinition->defaultValue,
 					);
@@ -1317,7 +1317,7 @@ final class SchemaBuilder
 	{
 		foreach ($this->typesInput as $inputTypeDefinition) {
 			$this->validateName(
-				"Input object type",
+				'Input object type',
 				$inputTypeDefinition->name,
 			);
 
@@ -1370,7 +1370,7 @@ final class SchemaBuilder
 				if ($inputFieldDefinition->defaultValue !== null) {
 					$this->validator->validateValue(
 						$this->errors,
-						sprintf("Default value of %s", lcfirst($inputFieldLocation)),
+						sprintf('Default value of %s', lcfirst($inputFieldLocation)),
 						$inputFieldDefinition->type,
 						$inputFieldDefinition->defaultValue,
 					);
@@ -1440,7 +1440,7 @@ final class SchemaBuilder
 	{
 		foreach ($this->typesInterface as $interfaceTypeDefinition) {
 			$this->validateName(
-				"Interface type",
+				'Interface type',
 				$interfaceTypeDefinition->name,
 			);
 
@@ -1599,7 +1599,7 @@ final class SchemaBuilder
 	{
 		foreach ($this->typesObject as $objectTypeDefinition) {
 			$this->validateName(
-				"Object type",
+				'Object type',
 				$objectTypeDefinition->name,
 			);
 
@@ -1789,7 +1789,7 @@ final class SchemaBuilder
 	{
 		foreach ($this->typesScalar as $scalarTypeDefinition) {
 			$this->validateName(
-				"Scalar type",
+				'Scalar type',
 				$scalarTypeDefinition->name,
 			);
 
@@ -1807,7 +1807,7 @@ final class SchemaBuilder
 	{
 		foreach ($this->typesUnion as $unionTypeDefinition) {
 			$this->validateName(
-				"Union type",
+				'Union type',
 				$unionTypeDefinition->name,
 			);
 

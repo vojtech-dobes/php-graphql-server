@@ -158,7 +158,7 @@ final class OperationExecution
 								$this->errorHandler->handleFieldResolverError($reason, $executionField);
 
 								return new ErrorFieldValue(
-									new GraphQL\Error("Field failed to resolve"),
+									new GraphQL\Error('Field failed to resolve'),
 								);
 							}
 						},
@@ -441,7 +441,7 @@ final class OperationExecution
 			$this->errorHandler->handleFieldResolverError($e, $executionField);
 
 			return new ErrorFieldValue(
-				new GraphQL\Error("Field failed to resolve"),
+				new GraphQL\Error('Field failed to resolve'),
 			);
 		}
 
@@ -484,7 +484,7 @@ final class OperationExecution
 		if ($fieldType instanceof GraphQL\Types\ListType) {
 			if (is_iterable($value) === false) {
 				return new ErrorFieldValue(
-					new GraphQL\Error("List resolved to non-iterable value"),
+					new GraphQL\Error('List resolved to non-iterable value'),
 				);
 			}
 
@@ -502,7 +502,7 @@ final class OperationExecution
 			}
 
 			return GuzzleHttp\Promise\Utils::all($result)->then(
-				fn ($result) => new ListFieldValue(
+				static fn ($result) => new ListFieldValue(
 					$itemType instanceof GraphQL\Types\NonNullType,
 					$result,
 				),
@@ -531,7 +531,7 @@ final class OperationExecution
 					return new ErrorFieldValue(
 						new GraphQL\Error(
 							sprintf(
-								"Abstract type %s failed to resolve",
+								'Abstract type %s failed to resolve',
 								$typeDefinition->name,
 							),
 						),
@@ -547,7 +547,7 @@ final class OperationExecution
 					return new ErrorFieldValue(
 						new GraphQL\Error(
 							sprintf(
-								"Abstract type %s was incorrectly resolved to %s type %s",
+								'Abstract type %s was incorrectly resolved to %s type %s',
 								$typeDefinition->name,
 								$objectTypeDefinition !== null
 									? $objectTypeDefinition->kind->format()
@@ -589,7 +589,7 @@ final class OperationExecution
 			return new ErrorFieldValue(
 				new GraphQL\Error(
 					sprintf(
-						"Scalar type %s failed to serialize",
+						'Scalar type %s failed to serialize',
 						$typeDefinition->name,
 					),
 				),

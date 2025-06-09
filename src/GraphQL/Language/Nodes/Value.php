@@ -4,7 +4,6 @@ namespace Vojtechdobes\GraphQL\Language\Nodes;
 
 use Generator;
 use Vojtechdobes\GrammarProcessing;
-use Vojtechdobes\GraphQL;
 
 
 final class Value implements GrammarProcessing\NodeInterpretation

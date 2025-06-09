@@ -13,7 +13,7 @@ final class CallbackFieldResolver implements FieldResolver
 {
 
 	/** @var callable(mixed, FieldSelection<TArguments, TContext>): TResolvedValue */
-	private $callback;
+	private mixed $callback;
 
 
 

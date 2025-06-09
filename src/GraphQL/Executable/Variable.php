@@ -2,8 +2,6 @@
 
 namespace Vojtechdobes\GraphQL\Executable;
 
-use Vojtechdobes\GraphQL;
-
 
 final class Variable
 {

@@ -39,8 +39,8 @@ enum TypeKind: string
 	public function isInputType(): bool
 	{
 		return match ($this) {
-			self::Enum, self::InputObject, self::List_, self::NonNull, self::Scalar => TRUE,
-			default => FALSE,
+			self::Enum, self::InputObject, self::List_, self::NonNull, self::Scalar => true,
+			default => false,
 		};
 	}
 
@@ -49,8 +49,8 @@ enum TypeKind: string
 	public function isOutputType(): bool
 	{
 		return match ($this) {
-			self::Enum, self::Interface_, self::Object_, self::Scalar, self::Union => TRUE,
-			default => FALSE,
+			self::Enum, self::Interface_, self::Object_, self::Scalar, self::Union => true,
+			default => false,
 		};
 	}
 
