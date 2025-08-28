@@ -36,7 +36,13 @@ abstract class GeneratedRegistry implements Registry
 	public function getItemOrNull(string $name): mixed
 	{
 		if (array_key_exists($name, $this->cache) === false) {
-			$this->cache[$name] = $this->{self::MethodPrefix . $name}();
+			$methodName = self::MethodPrefix . $name;
+
+			if (method_exists($this, $methodName)) {
+				$this->cache[$name] = $this->{$methodName}();
+			} else {
+				$this->cache[$name] = null;
+			}
 		}
 
 		return $this->cache[$name];
