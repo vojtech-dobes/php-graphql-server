@@ -459,11 +459,10 @@ final class ExecutableDocumentBuilder
 
 		$this->usedFragmentDefinitions[] = $fragmentDefinition->name;
 
-		/** @var TypeSystem\TypeWithFieldSelection|null $fragmentTypeDefinition */
 		$fragmentTypeDefinition = $this->schema->getTypeDefinitionOrNull($fragmentDefinition->onType->name);
 
-		if ($fragmentTypeDefinition === null) {
-			return;
+		if (!$fragmentTypeDefinition instanceof TypeSystem\TypeWithFieldSelection) {
+			return; // invalid type condition is reported by validation of fragment definition
 		}
 
 		if ($typeDefinition instanceof TypeSystem\InterfaceTypeDefinition) {
@@ -516,7 +515,7 @@ final class ExecutableDocumentBuilder
 		$this->validateSelectionSet(
 			$variableDefinitions,
 			"Fragment '{$fragmentDefinition->name}'",
-			$typeDefinition,
+			$fragmentTypeDefinition,
 			$fragmentDefinition->selectionSet,
 		);
 	}

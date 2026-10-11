@@ -445,6 +445,37 @@ return [
 			"Type condition of fragment 'F' spread on union type 'A' must be on its member type, but object type 'B' given",
 		],
 	],
+	'valid fragment on object spread in interface' => [
+		'interface A { a: String } type B implements A { a: String b: String } type Query { a: A }',
+		'fragment F on B { b } query { a { ...F } }',
+		[],
+	],
+	'valid fragment on object spread in union' => [
+		'type B { b: String } union A = B type Query { a: A }',
+		'fragment F on B { b } query { a { ...F } }',
+		[],
+	],
+	'invalid fragment on object spread in interface with unknown field' => [
+		'interface A { a: String } type B implements A { a: String b: String } type Query { a: A }',
+		'fragment F on B { c } query { a { ...F } }',
+		[
+			"Selection set on type 'B' references unknown field 'c'",
+		],
+	],
+	'invalid fragment on object spread in union with unknown field' => [
+		'type B { b: String } union A = B type Query { a: A }',
+		'fragment F on B { c } query { a { ...F } }',
+		[
+			"Selection set on type 'B' references unknown field 'c'",
+		],
+	],
+	'invalid fragment with condition on enum type spread in object type' => [
+		'enum A { X } type Query { a: String }',
+		'fragment F on A { a } query { ...F }',
+		[
+			"Type condition of fragment 'F' must be interface, object or union, but enum type 'A' given",
+		],
+	],
 	'invalid inline fragment in interface with condition on non-implementing object type' => [
 		'interface A type B type Query { a: A }',
 		'query { a { ... on B { x } } }',
