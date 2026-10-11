@@ -112,7 +112,7 @@ return [
 			"Schema definition can't be extended with unknown directive @d",
 		],
 	],
-	'invalid schema extension with non-union directive' => [
+	'invalid schema extension with non-schema directive' => [
 		'schema { query: Query } type Query',
 		'directive @d on SCALAR extend schema @d',
 		[
@@ -803,7 +803,7 @@ return [
 			'S' => Vojtechdobes\GraphQL\Builtin\StringScalarImplementation::class,
 		],
 	],
-	'invalid scalar type extension with non-union directive' => [
+	'invalid scalar type extension with non-scalar directive' => [
 		'scalar S' . RootQueryType(),
 		'directive @d on ENUM extend scalar S @d',
 		[
