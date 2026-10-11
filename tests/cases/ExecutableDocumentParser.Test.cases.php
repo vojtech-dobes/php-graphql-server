@@ -476,6 +476,47 @@ return [
 			"Directive @d isn't allowed to be placed on field 'a'",
 		],
 	],
+	'disallowed directives on field' => [
+		'directive @d on ENUM directive @e on ENUM type Query { a: String }',
+		'query { a @d @e }',
+		[
+			"Directive @d isn't allowed to be placed on field 'a'",
+			"Directive @e isn't allowed to be placed on field 'a'",
+		],
+	],
+	'unknown directive on field' => [
+		'type Query { a: String }',
+		'query { a @d }',
+		[
+			"Directive @d on field 'a' isn't defined",
+		],
+	],
+	'unknown directives on field' => [
+		'type Query { a: String }',
+		'query { a @d @e }',
+		[
+			"Directive @d on field 'a' isn't defined",
+			"Directive @e on field 'a' isn't defined",
+		],
+	],
+	'duplicate directives on field' => [
+		'directive @d on FIELD type Query { a: String }',
+		'query { a @d @d }',
+		[
+			"Directive @d on field 'a' can't be repeated",
+		],
+	],
+	'invalid directives on field' => [
+		'directive @d on ENUM directive @f on FIELD type Query { a: String }',
+		'query { a @d @d @e @e @f @f }',
+		[
+			"Directive @d #1 isn't allowed to be placed on field 'a'",
+			"Directive @d #2 isn't allowed to be placed on field 'a'",
+			"Directive @e #1 on field 'a' isn't defined",
+			"Directive @e #2 on field 'a' isn't defined",
+			"Directive @f on field 'a' can't be repeated",
+		],
+	],
 	'allowed directive on fragment definition' => [
 		'directive @d on FRAGMENT_DEFINITION type Query { a: String }',
 		'fragment F on Query @d { a } query { ... F }',
@@ -486,6 +527,47 @@ return [
 		'fragment F on Query @d { a } query { ... F }',
 		[
 			"Directive @d isn't allowed to be placed on fragment 'F'",
+		],
+	],
+	'disallowed directives on fragment definition' => [
+		'directive @d on ENUM directive @e on ENUM type Query { a: String }',
+		'fragment F on Query @d @e { a } query { ... F }',
+		[
+			"Directive @d isn't allowed to be placed on fragment 'F'",
+			"Directive @e isn't allowed to be placed on fragment 'F'",
+		],
+	],
+	'unknown directive on fragment definition' => [
+		'type Query { a: String }',
+		'fragment F on Query @d { a } query { ... F }',
+		[
+			"Directive @d on fragment 'F' isn't defined",
+		],
+	],
+	'unknown directives on fragment definition' => [
+		'type Query { a: String }',
+		'fragment F on Query @d @e { a } query { ... F }',
+		[
+			"Directive @d on fragment 'F' isn't defined",
+			"Directive @e on fragment 'F' isn't defined",
+		],
+	],
+	'duplicate directives on fragment definition' => [
+		'directive @d on FRAGMENT_DEFINITION type Query { a: String }',
+		'fragment F on Query @d @d { a } query { ... F }',
+		[
+			"Directive @d on fragment 'F' can't be repeated",
+		],
+	],
+	'invalid directives on fragment definition' => [
+		'directive @d on ENUM directive @f on FRAGMENT_DEFINITION type Query { a: String }',
+		'fragment F on Query @d @d @e @e @f @f { a } query { ... F }',
+		[
+			"Directive @d #1 isn't allowed to be placed on fragment 'F'",
+			"Directive @d #2 isn't allowed to be placed on fragment 'F'",
+			"Directive @e #1 on fragment 'F' isn't defined",
+			"Directive @e #2 on fragment 'F' isn't defined",
+			"Directive @f on fragment 'F' can't be repeated",
 		],
 	],
 	'allowed directive on fragment spread' => [
@@ -500,6 +582,47 @@ return [
 			"Directive @d isn't allowed to be placed on spread of fragment 'F'",
 		],
 	],
+	'disallowed directives on fragment spread' => [
+		'directive @d on ENUM directive @e on ENUM type Query { a: String }',
+		'fragment F on Query { a } query { ... F @d @e }',
+		[
+			"Directive @d isn't allowed to be placed on spread of fragment 'F'",
+			"Directive @e isn't allowed to be placed on spread of fragment 'F'",
+		],
+	],
+	'unknown directive on fragment spread' => [
+		'type Query { a: String }',
+		'fragment F on Query { a } query { ... F @d }',
+		[
+			"Directive @d on spread of fragment 'F' isn't defined",
+		],
+	],
+	'unknown directives on fragment spread' => [
+		'type Query { a: String }',
+		'fragment F on Query { a } query { ... F @d @e }',
+		[
+			"Directive @d on spread of fragment 'F' isn't defined",
+			"Directive @e on spread of fragment 'F' isn't defined",
+		],
+	],
+	'duplicate directives on fragment spread' => [
+		'directive @d on FRAGMENT_SPREAD type Query { a: String }',
+		'fragment F on Query { a } query { ... F @d @d }',
+		[
+			"Directive @d on spread of fragment 'F' can't be repeated",
+		],
+	],
+	'invalid directives on fragment spread' => [
+		'directive @d on ENUM directive @f on FRAGMENT_SPREAD type Query { a: String }',
+		'fragment F on Query { a } query { ... F @d @d @e @e @f @f }',
+		[
+			"Directive @d #1 isn't allowed to be placed on spread of fragment 'F'",
+			"Directive @d #2 isn't allowed to be placed on spread of fragment 'F'",
+			"Directive @e #1 on spread of fragment 'F' isn't defined",
+			"Directive @e #2 on spread of fragment 'F' isn't defined",
+			"Directive @f on spread of fragment 'F' can't be repeated",
+		],
+	],
 	'allowed directive on inline fragment' => [
 		'directive @d on INLINE_FRAGMENT type Query { a: String }',
 		'query { ... on Query @d { a } }',
@@ -510,6 +633,47 @@ return [
 		'query { ... on Query @d { a } }',
 		[
 			"Directive @d isn't allowed to be placed on inline fragment on query",
+		],
+	],
+	'disallowed directives on inline fragment' => [
+		'directive @d on ENUM directive @e on ENUM type Query { a: String }',
+		'query { ... on Query @d @e { a } }',
+		[
+			"Directive @d isn't allowed to be placed on inline fragment on query",
+			"Directive @e isn't allowed to be placed on inline fragment on query",
+		],
+	],
+	'unknown directive on inline fragment' => [
+		'type Query { a: String }',
+		'query { ... on Query @d { a } }',
+		[
+			"Directive @d on inline fragment on query isn't defined",
+		],
+	],
+	'unknown directives on inline fragment' => [
+		'type Query { a: String }',
+		'query { ... on Query @d @e { a } }',
+		[
+			"Directive @d on inline fragment on query isn't defined",
+			"Directive @e on inline fragment on query isn't defined",
+		],
+	],
+	'duplicate directives on inline fragment' => [
+		'directive @d on INLINE_FRAGMENT type Query { a: String }',
+		'query { ... on Query @d @d { a } }',
+		[
+			"Directive @d on inline fragment on query can't be repeated",
+		],
+	],
+	'invalid directives on inline fragment' => [
+		'directive @d on ENUM directive @f on INLINE_FRAGMENT type Query { a: String }',
+		'query { ... on Query @d @d @e @e @f @f { a } }',
+		[
+			"Directive @d #1 isn't allowed to be placed on inline fragment on query",
+			"Directive @d #2 isn't allowed to be placed on inline fragment on query",
+			"Directive @e #1 on inline fragment on query isn't defined",
+			"Directive @e #2 on inline fragment on query isn't defined",
+			"Directive @f on inline fragment on query can't be repeated",
 		],
 	],
 	'allowed directive on mutation operation' => [
@@ -524,6 +688,47 @@ return [
 			"Directive @d isn't allowed to be placed on mutation 'M'",
 		],
 	],
+	'disallowed directives on mutation operation' => [
+		'directive @d on ENUM directive @e on ENUM schema { mutation: Mutation } type Mutation { a: String }   ""   type Query',
+		'mutation M @d @e { a }',
+		[
+			"Directive @d isn't allowed to be placed on mutation 'M'",
+			"Directive @e isn't allowed to be placed on mutation 'M'",
+		],
+	],
+	'unknown directive on mutation operation' => [
+		'schema { mutation: Mutation } type Mutation { a: String }   ""   type Query',
+		'mutation M @d { a }',
+		[
+			"Directive @d on mutation 'M' isn't defined",
+		],
+	],
+	'unknown directives on mutation operation' => [
+		'schema { mutation: Mutation } type Mutation { a: String }   ""   type Query',
+		'mutation M @d @e { a }',
+		[
+			"Directive @d on mutation 'M' isn't defined",
+			"Directive @e on mutation 'M' isn't defined",
+		],
+	],
+	'duplicate directives on mutation operation' => [
+		'directive @d on MUTATION schema { mutation: Mutation } type Mutation { a: String }   ""   type Query',
+		'mutation M @d @d { a }',
+		[
+			"Directive @d on mutation 'M' can't be repeated",
+		],
+	],
+	'invalid directives on mutation operation' => [
+		'directive @d on ENUM directive @f on MUTATION schema { mutation: Mutation } type Mutation { a: String }   ""   type Query',
+		'mutation M @d @d @e @e @f @f { a }',
+		[
+			"Directive @d #1 isn't allowed to be placed on mutation 'M'",
+			"Directive @d #2 isn't allowed to be placed on mutation 'M'",
+			"Directive @e #1 on mutation 'M' isn't defined",
+			"Directive @e #2 on mutation 'M' isn't defined",
+			"Directive @f on mutation 'M' can't be repeated",
+		],
+	],
 	'allowed directive on query operation' => [
 		'directive @d on QUERY type Query { a: String }',
 		'query Q @d { a }',
@@ -536,6 +741,47 @@ return [
 			"Directive @d isn't allowed to be placed on query 'Q'",
 		],
 	],
+	'disallowed directives on query operation' => [
+		'directive @d on ENUM directive @e on ENUM type Query { a: String }',
+		'query Q @d @e { a }',
+		[
+			"Directive @d isn't allowed to be placed on query 'Q'",
+			"Directive @e isn't allowed to be placed on query 'Q'",
+		],
+	],
+	'unknown directive on query operation' => [
+		'type Query { a: String }',
+		'query Q @d { a }',
+		[
+			"Directive @d on query 'Q' isn't defined",
+		],
+	],
+	'unknown directives on query operation' => [
+		'type Query { a: String }',
+		'query Q @d @e { a }',
+		[
+			"Directive @d on query 'Q' isn't defined",
+			"Directive @e on query 'Q' isn't defined",
+		],
+	],
+	'duplicate directives on query operation' => [
+		'directive @d on QUERY type Query { a: String }',
+		'query Q @d @d { a }',
+		[
+			"Directive @d on query 'Q' can't be repeated",
+		],
+	],
+	'invalid directives on query operation' => [
+		'directive @d on ENUM directive @f on QUERY type Query { a: String }',
+		'query Q @d @d @e @e @f @f { a }',
+		[
+			"Directive @d #1 isn't allowed to be placed on query 'Q'",
+			"Directive @d #2 isn't allowed to be placed on query 'Q'",
+			"Directive @e #1 on query 'Q' isn't defined",
+			"Directive @e #2 on query 'Q' isn't defined",
+			"Directive @f on query 'Q' can't be repeated",
+		],
+	],
 	'allowed directive on subscription operation' => [
 		'directive @d on SUBSCRIPTION schema { subscription: Subscription } type Subscription { a: String }   ""   type Query',
 		'subscription S @d { a }',
@@ -546,6 +792,47 @@ return [
 		'subscription S @d { a }',
 		[
 			"Directive @d isn't allowed to be placed on subscription 'S'",
+		],
+	],
+	'disallowed directives on subscription operation' => [
+		'directive @d on ENUM directive @e on ENUM schema { subscription: Subscription } type Subscription { a: String }   ""   type Query',
+		'subscription S @d @e { a }',
+		[
+			"Directive @d isn't allowed to be placed on subscription 'S'",
+			"Directive @e isn't allowed to be placed on subscription 'S'",
+		],
+	],
+	'unknown directive on subscription operation' => [
+		'schema { subscription: Subscription } type Subscription { a: String }   ""   type Query',
+		'subscription S @d { a }',
+		[
+			"Directive @d on subscription 'S' isn't defined",
+		],
+	],
+	'unknown directives on subscription operation' => [
+		'schema { subscription: Subscription } type Subscription { a: String }   ""   type Query',
+		'subscription S @d @e { a }',
+		[
+			"Directive @d on subscription 'S' isn't defined",
+			"Directive @e on subscription 'S' isn't defined",
+		],
+	],
+	'duplicate directives on subscription operation' => [
+		'directive @d on SUBSCRIPTION schema { subscription: Subscription } type Subscription { a: String }   ""   type Query',
+		'subscription S @d @d { a }',
+		[
+			"Directive @d on subscription 'S' can't be repeated",
+		],
+	],
+	'invalid directives on subscription operation' => [
+		'directive @d on ENUM directive @f on SUBSCRIPTION schema { subscription: Subscription } type Subscription { a: String }   ""   type Query',
+		'subscription S @d @d @e @e @f @f { a }',
+		[
+			"Directive @d #1 isn't allowed to be placed on subscription 'S'",
+			"Directive @d #2 isn't allowed to be placed on subscription 'S'",
+			"Directive @e #1 on subscription 'S' isn't defined",
+			"Directive @e #2 on subscription 'S' isn't defined",
+			"Directive @f on subscription 'S' can't be repeated",
 		],
 	],
 	// 'invalid selection set on fragment with duplicate response key between 2 fields' => [
