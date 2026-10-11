@@ -308,11 +308,7 @@ final class ExecutableDocumentBuilder
 		Executable\Field $field,
 	): void
 	{
-		if ($field->name === '__typename') {
-			return;
-		}
-
-		if ($typeDefinition instanceof TypeSystem\UnionTypeDefinition) {
+		if ($field->name !== '__typename' && $typeDefinition instanceof TypeSystem\UnionTypeDefinition) {
 			$this->errors->addErrorMessage(
 				sprintf(
 					"Only fragments and __typename are allowed in selection set on union type '%s'",
@@ -328,6 +324,7 @@ final class ExecutableDocumentBuilder
 		$fieldDefinition = match ($field->name) {
 			'__schema' => $this->getIntrospectionSchemaField($typeDefinition),
 			'__type' => $this->getIntrospectionTypeField($typeDefinition),
+			'__typename' => $this->getIntrospectionTypenameField(),
 			default => $typeDefinition->fieldsByName[$field->name] ?? null,
 		};
 
@@ -440,6 +437,19 @@ final class ExecutableDocumentBuilder
 			directives: [],
 			name: '__type',
 			type: new Types\NamedType('__Type'),
+		);
+	}
+
+
+
+	private function getIntrospectionTypenameField(): TypeSystem\FieldDefinition
+	{
+		return new TypeSystem\FieldDefinition(
+			argumentDefinitions: [],
+			description: null,
+			directives: [],
+			name: '__typename',
+			type: new Types\NonNullType(new Types\NamedType('String')),
 		);
 	}
 

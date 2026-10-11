@@ -760,6 +760,48 @@ return [
 		'query { a { __typename } }',
 		[],
 	],
+	'invalid __typename field selection with argument' => [
+		'type Query { a: String }',
+		'query { __typename(x: 1) }',
+		[
+			"Field '__typename' can't accept unknown argument 'x'",
+		],
+	],
+	'invalid __typename field selection with subselection' => [
+		'type Query { a: String }',
+		'query { __typename { a } }',
+		[
+			"Object field 'Query.__typename' has scalar type 'String' which doesn't support selecting subfields",
+		],
+	],
+	'invalid __typename field selection with unknown directive' => [
+		'type Query { a: String }',
+		'query { __typename @d }',
+		[
+			"Directive @d on field '__typename' isn't defined",
+		],
+	],
+	'invalid __typename field selection with invalid directive argument' => [
+		'type Query { a: String }',
+		'query { __typename @include(if: "A") }',
+		[
+			"Argument 'if' of Directive @include on field '__typename' must be scalar 'Boolean', but string value given",
+		],
+	],
+	'invalid __typename field selection on union type with argument' => [
+		'type A { a: String } union B = A type Query { a: B }',
+		'query { a { __typename(x: 1) } }',
+		[
+			"Field '__typename' can't accept unknown argument 'x'",
+		],
+	],
+	'invalid __typename field selection on union type with subselection' => [
+		'type A { a: String } union B = A type Query { a: B }',
+		'query { a { __typename { a } } }',
+		[
+			"Object field 'B.__typename' has scalar type 'String' which doesn't support selecting subfields",
+		],
+	],
 	'allowed directive on field' => [
 		'directive @d on FIELD type Query { a: String }',
 		'query { a @d }',
