@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a0ada81bc15583de351ad86c1a959677",
+    "content-hash": "2005cd7b47747ced0ba9c95ecdc3da73",
     "packages": [
         {
             "name": "guzzlehttp/promises",
@@ -260,12 +260,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vojtech-dobes/php-grammar-processing.git",
-                "reference": "7243f2591a5ab8bbf2348ec35bb392d03593db3d"
+                "reference": "2eceef3ed228a01afeed873253ae8a28ab02d398"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vojtech-dobes/php-grammar-processing/zipball/7243f2591a5ab8bbf2348ec35bb392d03593db3d",
-                "reference": "7243f2591a5ab8bbf2348ec35bb392d03593db3d",
+                "url": "https://api.github.com/repos/vojtech-dobes/php-grammar-processing/zipball/2eceef3ed228a01afeed873253ae8a28ab02d398",
+                "reference": "2eceef3ed228a01afeed873253ae8a28ab02d398",
                 "shasum": ""
             },
             "require": {
@@ -273,10 +273,12 @@
                 "php": "~8.4"
             },
             "require-dev": {
-                "nette/tester": "^2.5.4",
+                "nette/tester": "^2.5.7",
                 "phpstan/phpstan": "^2.1.12",
+                "phpstan/phpstan-strict-rules": "^2.0.4",
                 "spaze/phpstan-disallowed-calls": "^4.5.0",
-                "tracy/tracy": "^2.10.9"
+                "tracy/tracy": "^2.11.0",
+                "vojtech-dobes/php-codestyle": "~0.2.0"
             },
             "default-branch": true,
             "type": "library",
@@ -310,7 +312,7 @@
                 "issues": "https://github.com/vojtech-dobes/php-grammar-processing/issues",
                 "source": "https://github.com/vojtech-dobes/php-grammar-processing/tree/master"
             },
-            "time": "2025-04-25T15:54:05+00:00"
+            "time": "2026-10-11T10:51:44+00:00"
         }
     ],
     "packages-dev": [

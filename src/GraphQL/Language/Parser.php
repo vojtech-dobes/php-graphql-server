@@ -163,7 +163,7 @@ final class Parser
 			return $this->grammar
 				->parseSource($document, $rootSymbol)
 				->interpret($this->interpretation);
-		} catch (GrammarProcessing\CannotConsumeTokenException $e) {
+		} catch (GrammarProcessing\UnexpectedTokenException $e) {
 			$error = new GraphQL\Error($e->getMessage());
 
 			if ($e->location !== null) {
