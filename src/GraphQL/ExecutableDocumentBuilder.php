@@ -369,7 +369,8 @@ final class ExecutableDocumentBuilder
 			} else {
 				$this->errors->addErrorMessage(
 					sprintf(
-						"Object field '%s.%s' has %s type '%s' which requires selecting subfields",
+						"%s field '%s.%s' has %s type '%s' which requires selecting subfields",
+						ucfirst($typeDefinition->kind->format()),
 						$typeDefinition->name,
 						$field->name,
 						$fieldTypeDefinition->kind->format(),
@@ -380,7 +381,8 @@ final class ExecutableDocumentBuilder
 		} elseif ($field->selectionSet !== null) {
 			$this->errors->addErrorMessage(
 				sprintf(
-					"Object field '%s.%s' has %s type '%s' which doesn't support selecting subfields",
+					"%s field '%s.%s' has %s type '%s' which doesn't support selecting subfields",
+					ucfirst($typeDefinition->kind->format()),
 					$typeDefinition->name,
 					$field->name,
 					$fieldTypeDefinition->kind->format(),

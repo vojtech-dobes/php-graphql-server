@@ -341,14 +341,14 @@ return [
 		'type A interface B { a: A } type Query { a: B }',
 		'query { a { a } }',
 		[
-			"Object field 'B.a' has object type 'A' which requires selecting subfields",
+			"Interface field 'B.a' has object type 'A' which requires selecting subfields",
 		],
 	],
 	'invalid selection of enum type field with subselection on interface type' => [
 		'enum A interface B { a: A } type Query { a: B }',
 		'query { a { a { b } } }',
 		[
-			"Object field 'B.a' has enum type 'A' which doesn't support selecting subfields",
+			"Interface field 'B.a' has enum type 'A' which doesn't support selecting subfields",
 		],
 	],
 	'invalid selection using spread of unknown fragment' => [
@@ -799,7 +799,7 @@ return [
 		'type A { a: String } union B = A type Query { a: B }',
 		'query { a { __typename { a } } }',
 		[
-			"Object field 'B.__typename' has scalar type 'String' which doesn't support selecting subfields",
+			"Union field 'B.__typename' has scalar type 'String' which doesn't support selecting subfields",
 		],
 	],
 	'allowed directive on field' => [
