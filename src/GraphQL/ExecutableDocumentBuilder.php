@@ -23,6 +23,9 @@ final class ExecutableDocumentBuilder
 	/** @var list<string> */
 	private $validatedFragments = [];
 
+	/** @var list<string> */
+	private $fragmentSpreadPath = [];
+
 	/** @var array<string, list<string>> */
 	private $possibleTypes = [];
 
@@ -496,11 +499,27 @@ final class ExecutableDocumentBuilder
 			$fragmentSpread->directives,
 		);
 
+		$cycleStart = array_search($fragmentDefinition->name, $this->fragmentSpreadPath, true);
+
+		if ($cycleStart !== false) {
+			$this->errors->addErrorMessage(
+				sprintf(
+					"Fragment '%s' can't spread itself (%s)",
+					$fragmentDefinition->name,
+					implode(' -> ', [...array_slice($this->fragmentSpreadPath, $cycleStart), $fragmentDefinition->name]),
+				),
+			);
+
+			return;
+		}
+
 		if (in_array($fragmentDefinition->name, $this->validatedFragments, true)) {
 			return;
 		}
 
 		$this->validatedFragments[] = $fragmentDefinition->name;
+
+		$this->fragmentSpreadPath[] = $fragmentDefinition->name;
 
 		$this->validateSelectionSet(
 			$variableDefinitions,
@@ -508,6 +527,8 @@ final class ExecutableDocumentBuilder
 			$fragmentTypeDefinition,
 			$fragmentDefinition->selectionSet,
 		);
+
+		array_pop($this->fragmentSpreadPath);
 	}
 
 

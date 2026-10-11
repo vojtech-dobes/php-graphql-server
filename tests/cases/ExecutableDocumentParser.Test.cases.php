@@ -567,6 +567,34 @@ return [
 			"Type condition of fragment 'F' must be interface, object or union, but enum type 'A' given",
 		],
 	],
+	'invalid fragment spreading itself' => [
+		'type Query { a: String }',
+		'query { ...F } fragment F on Query { a ...F }',
+		[
+			"Fragment 'F' can't spread itself (F -> F)",
+		],
+	],
+	'invalid fragment spreading itself in nested selection set' => [
+		'type A { a: A } type Query { a: A }',
+		'query { a { ...F } } fragment F on A { ... { a { ...F } } }',
+		[
+			"Fragment 'F' can't spread itself (F -> F)",
+		],
+	],
+	'invalid fragments spreading each other' => [
+		'type Query { a: String b: String }',
+		'query { ...F1 } fragment F1 on Query { a ...F2 } fragment F2 on Query { b ...F1 }',
+		[
+			"Fragment 'F1' can't spread itself (F1 -> F2 -> F1)",
+		],
+	],
+	'invalid unused fragment spreading itself' => [
+		'type Query { a: String }',
+		'query { a } fragment F on Query { a ...F }',
+		[
+			"Fragment 'F' isn't used anywhere",
+		],
+	],
 	'invalid fragment spread multiple times with unknown field' => [
 		'type Query { a: String }',
 		'query { ...F ...F } fragment F on Query { x }',
