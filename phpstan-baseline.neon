@@ -7,12 +7,6 @@ parameters:
 			path: src/GraphQL/Deferred.php
 
 		-
-			message: '#^PHPDoc tag @var with type Vojtechdobes\\GraphQL\\TypeSystem\\TypeWithFieldSelection is not subtype of native type Vojtechdobes\\GraphQL\\TypeSystem\\TypeDefinition\.$#'
-			identifier: varTag.nativeType
-			count: 1
-			path: src/GraphQL/ExecutableDocumentBuilder.php
-
-		-
 			message: '#^Parameter \$operationDefinitions of class Vojtechdobes\\GraphQL\\Executable\\Document constructor expects non\-empty\-list\<Vojtechdobes\\GraphQL\\Executable\\OperationDefinition\>, list\<Vojtechdobes\\GraphQL\\Executable\\OperationDefinition\> given\.$#'
 			identifier: argument.type
 			count: 1

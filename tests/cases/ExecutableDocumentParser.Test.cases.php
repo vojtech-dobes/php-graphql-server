@@ -434,15 +434,106 @@ return [
 		[],
 	],
 	'valid fragment spread in interface with condition on other interface' => [
-		'interface A { a: String } interface B implements A { a: String } type Query { a: A }',
+		'interface A { a: String } interface B implements A { a: String } type C implements A & B { a: String } type Query { a: A }',
 		'fragment F on B { a } query { a { ... F } }',
 		[],
+	],
+	'invalid fragment spread in interface with condition on other interface without implementing object type' => [
+		'interface A { a: String } interface B implements A { a: String } type Query { a: A }',
+		'fragment F on B { a } query { a { ... F } }',
+		[
+			"Type condition of fragment 'F' spread on interface type 'A' must be on a compatible type, but interface type 'B' given",
+		],
 	],
 	'invalid fragment spread in union with condition on non-member type' => [
 		'union A type B { a: String } type Query { a: A }',
 		'fragment F on B { a } query { a { ... F } }',
 		[
-			"Type condition of fragment 'F' spread on union type 'A' must be on its member type, but object type 'B' given",
+			"Type condition of fragment 'F' spread on union type 'A' must be on a compatible type, but object type 'B' given",
+		],
+	],
+	'valid fragment spread in interface with condition on other interface sharing implementing type' => [
+		'interface A { a: String } interface I { a: String } type B implements A & I { a: String } type Query { a: A }',
+		'fragment F on I { __typename } query { a { ...F } }',
+		[],
+	],
+	'invalid fragment spread in interface with condition on other interface not sharing implementing type' => [
+		'interface A { a: String } interface I { a: String } type B implements A { a: String } type C implements I { a: String } type Query { a: A }',
+		'fragment F on I { __typename } query { a { ...F } }',
+		[
+			"Type condition of fragment 'F' spread on interface type 'A' must be on a compatible type, but interface type 'I' given",
+		],
+	],
+	'valid fragment spread in interface with condition on union with implementing member' => [
+		'interface A { a: String } type B implements A { a: String } union U = B type Query { a: A }',
+		'fragment F on U { __typename } query { a { ...F } }',
+		[],
+	],
+	'invalid fragment spread in interface with condition on union without implementing member' => [
+		'interface A { a: String } type B implements A { a: String } type C { c: String } union U = C type Query { a: A }',
+		'fragment F on U { __typename } query { a { ...F } }',
+		[
+			"Type condition of fragment 'F' spread on interface type 'A' must be on a compatible type, but union type 'U' given",
+		],
+	],
+	'valid fragment spread in union with condition on interface implemented by member' => [
+		'interface I { a: String } type B implements I { a: String } union A = B type Query { a: A }',
+		'fragment F on I { __typename } query { a { ...F } }',
+		[],
+	],
+	'invalid fragment spread in union with condition on interface not implemented by member' => [
+		'interface I { a: String } type B { a: String } type C implements I { a: String } union A = B type Query { a: A }',
+		'fragment F on I { __typename } query { a { ...F } }',
+		[
+			"Type condition of fragment 'F' spread on union type 'A' must be on a compatible type, but interface type 'I' given",
+		],
+	],
+	'valid fragment spread in union with condition on union sharing member' => [
+		'type B { b: String } union A = B union U = B type Query { a: A }',
+		'fragment F on U { __typename } query { a { ...F } }',
+		[],
+	],
+	'invalid fragment spread in union with condition on union not sharing member' => [
+		'type B { b: String } type C { c: String } union A = B union U = C type Query { a: A }',
+		'fragment F on U { __typename } query { a { ...F } }',
+		[
+			"Type condition of fragment 'F' spread on union type 'A' must be on a compatible type, but union type 'U' given",
+		],
+	],
+	'valid fragment spread in object with condition on same object type' => [
+		'type A { a: String } type Query { a: A }',
+		'fragment F on A { __typename } query { a { ...F } }',
+		[],
+	],
+	'invalid fragment spread in object with condition on other object type' => [
+		'type A { a: String } type B { b: String } type Query { a: A }',
+		'fragment F on B { __typename } query { a { ...F } }',
+		[
+			"Type condition of fragment 'F' spread on object type 'A' must be on a compatible type, but object type 'B' given",
+		],
+	],
+	'valid fragment spread in object with condition on implemented interface' => [
+		'interface I { a: String } type A implements I { a: String } type Query { a: A }',
+		'fragment F on I { __typename } query { a { ...F } }',
+		[],
+	],
+	'invalid fragment spread in object with condition on non-implemented interface' => [
+		'interface I { a: String } type A { a: String } type B implements I { a: String } type Query { a: A }',
+		'fragment F on I { __typename } query { a { ...F } }',
+		[
+			"Type condition of fragment 'F' spread on object type 'A' must be on a compatible type, but interface type 'I' given",
+		],
+	],
+	'valid fragment spread in object with condition on union with it as member' => [
+		'type A { a: String } union U = A type Query { a: A }',
+		'fragment F on U { __typename } query { a { ...F } }',
+		[],
+	],
+	'invalid fragment spread in object with condition on union without it as member' => [
+		'type A { a: String } type B { b: String } union U = B type Query { a: A }',
+		'fragment F on U { __typename } query { a { ...F } }',
+		[
+			"Type condition of fragment 'F' spread on object type 'A' must be on a compatible type, but union type 'U' given",
 		],
 	],
 	'valid fragment on object spread in interface' => [
@@ -492,7 +583,7 @@ return [
 		'interface A type B type Query { a: A }',
 		'query { a { ... on B { x } } }',
 		[
-			"Type condition of inline fragment on interface type 'A' must be on object type implementing it, but object type 'B' given",
+			"Type condition of inline fragment on interface type 'A' must be on a compatible type, but object type 'B' given",
 		],
 	],
 	'invalid inline fragment in union with condition on unknown type' => [
@@ -506,7 +597,127 @@ return [
 		'union A type B type Query { a: A }',
 		'query { a { ... on B { x } } }',
 		[
-			"Type condition of inline fragment on union type 'A' must be on its member type, but object type 'B' given",
+			"Type condition of inline fragment on union type 'A' must be on a compatible type, but object type 'B' given",
+		],
+	],
+	'valid inline fragment in interface with condition on implementing object type' => [
+		'interface A { a: String } type B implements A { a: String } type Query { a: A }',
+		'query { a { ... on B { __typename } } }',
+		[],
+	],
+	'valid inline fragment in interface with condition on same interface' => [
+		'interface A { a: String } type B implements A { a: String } type Query { a: A }',
+		'query { a { ... on A { __typename } } }',
+		[],
+	],
+	'valid inline fragment in interface with condition on other interface sharing implementing type' => [
+		'interface A { a: String } interface I { a: String } type B implements A & I { a: String } type Query { a: A }',
+		'query { a { ... on I { __typename } } }',
+		[],
+	],
+	'invalid inline fragment in interface with condition on other interface not sharing implementing type' => [
+		'interface A { a: String } interface I { a: String } type B implements A { a: String } type C implements I { a: String } type Query { a: A }',
+		'query { a { ... on I { __typename } } }',
+		[
+			"Type condition of inline fragment on interface type 'A' must be on a compatible type, but interface type 'I' given",
+		],
+	],
+	'valid inline fragment in interface with condition on union with implementing member' => [
+		'interface A { a: String } type B implements A { a: String } union U = B type Query { a: A }',
+		'query { a { ... on U { __typename } } }',
+		[],
+	],
+	'invalid inline fragment in interface with condition on union without implementing member' => [
+		'interface A { a: String } type B implements A { a: String } type C { c: String } union U = C type Query { a: A }',
+		'query { a { ... on U { __typename } } }',
+		[
+			"Type condition of inline fragment on interface type 'A' must be on a compatible type, but union type 'U' given",
+		],
+	],
+	'valid inline fragment in union with condition on member type' => [
+		'type B { b: String } union A = B type Query { a: A }',
+		'query { a { ... on B { __typename } } }',
+		[],
+	],
+	'valid inline fragment in union with condition on interface implemented by member' => [
+		'interface I { a: String } type B implements I { a: String } union A = B type Query { a: A }',
+		'query { a { ... on I { __typename } } }',
+		[],
+	],
+	'invalid inline fragment in union with condition on interface not implemented by member' => [
+		'interface I { a: String } type B { a: String } type C implements I { a: String } union A = B type Query { a: A }',
+		'query { a { ... on I { __typename } } }',
+		[
+			"Type condition of inline fragment on union type 'A' must be on a compatible type, but interface type 'I' given",
+		],
+	],
+	'valid inline fragment in union with condition on union sharing member' => [
+		'type B { b: String } union A = B union U = B type Query { a: A }',
+		'query { a { ... on U { __typename } } }',
+		[],
+	],
+	'invalid inline fragment in union with condition on union not sharing member' => [
+		'type B { b: String } type C { c: String } union A = B union U = C type Query { a: A }',
+		'query { a { ... on U { __typename } } }',
+		[
+			"Type condition of inline fragment on union type 'A' must be on a compatible type, but union type 'U' given",
+		],
+	],
+	'valid inline fragment in object with condition on same object type' => [
+		'type A { a: String } type Query { a: A }',
+		'query { a { ... on A { __typename } } }',
+		[],
+	],
+	'invalid inline fragment in object with condition on other object type' => [
+		'type A { a: String } type B { b: String } type Query { a: A }',
+		'query { a { ... on B { __typename } } }',
+		[
+			"Type condition of inline fragment on object type 'A' must be on a compatible type, but object type 'B' given",
+		],
+	],
+	'valid inline fragment in object with condition on implemented interface' => [
+		'interface I { a: String } type A implements I { a: String } type Query { a: A }',
+		'query { a { ... on I { __typename } } }',
+		[],
+	],
+	'invalid inline fragment in object with condition on non-implemented interface' => [
+		'interface I { a: String } type A { a: String } type B implements I { a: String } type Query { a: A }',
+		'query { a { ... on I { __typename } } }',
+		[
+			"Type condition of inline fragment on object type 'A' must be on a compatible type, but interface type 'I' given",
+		],
+	],
+	'valid inline fragment in object with condition on union with it as member' => [
+		'type A { a: String } union U = A type Query { a: A }',
+		'query { a { ... on U { __typename } } }',
+		[],
+	],
+	'invalid inline fragment in object with condition on union without it as member' => [
+		'type A { a: String } type B { b: String } union U = B type Query { a: A }',
+		'query { a { ... on U { __typename } } }',
+		[
+			"Type condition of inline fragment on object type 'A' must be on a compatible type, but union type 'U' given",
+		],
+	],
+	'invalid inline fragment in interface with condition on scalar type' => [
+		'interface A { a: String } type B implements A { a: String } type Query { a: A }',
+		'query { a { ... on String { __typename } } }',
+		[
+			"Type condition of inline fragment must be interface, object or union, but scalar type 'String' given",
+		],
+	],
+	'invalid inline fragment in union with condition on scalar type' => [
+		'type B { b: String } union A = B type Query { a: A }',
+		'query { a { ... on String { __typename } } }',
+		[
+			"Type condition of inline fragment must be interface, object or union, but scalar type 'String' given",
+		],
+	],
+	'invalid inline fragment in object with condition on scalar type' => [
+		'type A { a: String } type Query { a: A }',
+		'query { a { ... on String { __typename } } }',
+		[
+			"Type condition of inline fragment must be interface, object or union, but scalar type 'String' given",
 		],
 	],
 	'invalid field selection on union type' => [

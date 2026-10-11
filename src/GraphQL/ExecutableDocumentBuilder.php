@@ -23,6 +23,9 @@ final class ExecutableDocumentBuilder
 	/** @var list<string> */
 	private $validatedFragments = [];
 
+	/** @var array<string, list<string>> */
+	private $possibleTypes = [];
+
 	private Validator $validator;
 
 
@@ -470,43 +473,19 @@ final class ExecutableDocumentBuilder
 			return; // invalid type condition is reported by validation of fragment definition
 		}
 
-		if ($typeDefinition instanceof TypeSystem\InterfaceTypeDefinition) {
-			$isCompatible = match (true) {
-				$fragmentTypeDefinition instanceof TypeSystem\InterfaceTypeDefinition,
-				$fragmentTypeDefinition instanceof TypeSystem\ObjectTypeDefinition => (
-					$typeDefinition->name === $fragmentTypeDefinition->name
-					|| in_array($typeDefinition->name, $fragmentTypeDefinition->implementedInterfaces, true)
+		if ($this->areTypesWithFieldSelectionCompatible($typeDefinition, $fragmentTypeDefinition) === false) {
+			$this->errors->addErrorMessage(
+				sprintf(
+					"Type condition of fragment '%s' spread on %s type '%s' must be on a compatible type, but %s type '%s' given",
+					$fragmentDefinition->name,
+					$typeDefinition->kind->format(),
+					$typeDefinition->name,
+					$fragmentTypeDefinition->kind->format(),
+					$fragmentTypeDefinition->name,
 				),
-				$fragmentTypeDefinition instanceof TypeSystem\UnionTypeDefinition => $fragmentTypeDefinition->name === $typeDefinition->name,
-			};
+			);
 
-			if ($isCompatible === false) {
-				$this->errors->addErrorMessage(
-					sprintf(
-						"Type condition of fragment '%s' spread on interface type '%s' must be on a compatible type, but %s type '%s' given",
-						$fragmentDefinition->name,
-						$typeDefinition->name,
-						$fragmentTypeDefinition->kind->format(),
-						$fragmentTypeDefinition->name,
-					),
-				);
-
-				return;
-			}
-		} elseif ($typeDefinition instanceof TypeSystem\UnionTypeDefinition) {
-			if (in_array($fragmentTypeDefinition->name, $typeDefinition->possibleTypes, true) === false) {
-				$this->errors->addErrorMessage(
-					sprintf(
-						"Type condition of fragment '%s' spread on union type '%s' must be on its member type, but %s type '%s' given",
-						$fragmentDefinition->name,
-						$typeDefinition->name,
-						$fragmentTypeDefinition->kind->format(),
-						$fragmentTypeDefinition->name,
-					),
-				);
-
-				return;
-			}
+			return;
 		}
 
 		$this->validator->validateDirectives(
@@ -557,39 +536,30 @@ final class ExecutableDocumentBuilder
 				return;
 			}
 
-			/** @var TypeSystem\TypeWithFieldSelection $fragmentTypeDefinition (This is verified by being already in selection) */
+			if (!$fragmentTypeDefinition instanceof TypeSystem\TypeWithFieldSelection) {
+				$this->errors->addErrorMessage(
+					sprintf(
+						"Type condition of inline fragment must be interface, object or union, but %s type '%s' given",
+						$fragmentTypeDefinition->kind->format(),
+						$fragmentTypeDefinition->name,
+					),
+				);
 
-			if ($typeDefinition instanceof TypeSystem\InterfaceTypeDefinition) {
-				if (
-					!$fragmentTypeDefinition instanceof TypeSystem\ObjectTypeDefinition
-					|| in_array($typeDefinition->name, $fragmentTypeDefinition->implementedInterfaces, true) === false
-				) {
-					$this->errors->addErrorMessage(
-						sprintf(
-							"Type condition of inline fragment on interface type '%s' must be on object type implementing it, but %s type '%s' given",
-							$typeDefinition->name,
-							$fragmentTypeDefinition->kind->format(),
-							$fragmentTypeDefinition->name,
-						),
-					);
+				return;
+			}
 
-					return;
-				}
-			} elseif ($typeDefinition instanceof TypeSystem\UnionTypeDefinition) {
-				if (in_array($fragmentTypeDefinition->name, $typeDefinition->possibleTypes, true) === false) {
-					$this->errors->addErrorMessage(
-						sprintf(
-							"Type condition of inline fragment on union type '%s' must be on its member type, but %s type '%s' given",
-							$typeDefinition->name,
-							$fragmentTypeDefinition->kind->format(),
-							$fragmentTypeDefinition->name,
-						),
-					);
+			if ($this->areTypesWithFieldSelectionCompatible($typeDefinition, $fragmentTypeDefinition) === false) {
+				$this->errors->addErrorMessage(
+					sprintf(
+						"Type condition of inline fragment on %s type '%s' must be on a compatible type, but %s type '%s' given",
+						$typeDefinition->kind->format(),
+						$typeDefinition->name,
+						$fragmentTypeDefinition->kind->format(),
+						$fragmentTypeDefinition->name,
+					),
+				);
 
-					return;
-				}
-
-				/** @var TypeSystem\ObjectTypeDefinition $fragmentTypeDefinition (This is verified by being among Union possible types which must be Object) */
+				return;
 			}
 		} else {
 			$fragmentTypeDefinition = $typeDefinition;
@@ -609,6 +579,40 @@ final class ExecutableDocumentBuilder
 			$fragmentTypeDefinition,
 			$inlineFragment->selectionSet,
 		);
+	}
+
+
+
+	private function areTypesWithFieldSelectionCompatible(TypeSystem\TypeWithFieldSelection $a, TypeSystem\TypeWithFieldSelection $b): bool
+	{
+		if ($a->name === $b->name) {
+			return true;
+		}
+
+		return array_intersect($this->listPossibleTypes($a), $this->listPossibleTypes($b)) !== [];
+	}
+
+
+
+	/**
+	 * @return list<string>
+	 */
+	private function listPossibleTypes(TypeSystem\TypeWithFieldSelection $typeDefinition): array
+	{
+		return $this->possibleTypes[$typeDefinition->name] ??= match (true) {
+			$typeDefinition instanceof TypeSystem\ObjectTypeDefinition => [$typeDefinition->name],
+			$typeDefinition instanceof TypeSystem\UnionTypeDefinition => $typeDefinition->possibleTypes,
+			$typeDefinition instanceof TypeSystem\InterfaceTypeDefinition => array_values(array_map(
+				static fn ($objectTypeDefinition) => $objectTypeDefinition->name,
+				array_filter(
+					$this->schema->getTypeDefinitions(),
+					static fn ($aTypeDefinition) => (
+						$aTypeDefinition instanceof TypeSystem\ObjectTypeDefinition
+						&& in_array($typeDefinition->name, $aTypeDefinition->implementedInterfaces, true)
+					),
+				),
+			)),
+		};
 	}
 
 }
