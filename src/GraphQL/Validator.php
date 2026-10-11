@@ -651,10 +651,10 @@ final class Validator
 
 		$itemType = $expectedType->getWrappedType();
 
-		foreach ($actualValue->items as $itemValue) {
+		foreach ($actualValue->items as $i => $itemValue) {
 			$this->validateValue(
 				$errors,
-				'X' . $location,
+				sprintf('List item #%s in %s', $i + 1, lcfirst($location)),
 				$itemType,
 				$itemValue,
 			);

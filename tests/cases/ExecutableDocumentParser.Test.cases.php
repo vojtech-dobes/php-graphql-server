@@ -264,6 +264,20 @@ return [
 			"Argument 'arg1' of Field 'a' must be scalar 'String', but boolean value given",
 		],
 	],
+	'invalid string list field argument with boolean item' => [
+		'type Query { a(arg1: [String]): String }',
+		'query { a(arg1: ["A", true]) }',
+		[
+			"List item #2 in argument 'arg1' of Field 'a' must be scalar 'String', but boolean value given",
+		],
+	],
+	'invalid string list list field argument with boolean item' => [
+		'type Query { a(arg1: [[String]]): String }',
+		'query { a(arg1: [["A"], [true]]) }',
+		[
+			"List item #1 in list item #2 in argument 'arg1' of Field 'a' must be scalar 'String', but boolean value given",
+		],
+	],
 	'invalid selection of unknown field on query type' => [
 		'type Query',
 		'query { a }',
