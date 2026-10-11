@@ -149,15 +149,16 @@ return [
 			"Schema definition can't be extended with already configured non-repeatable directive @d",
 		],
 	],
-	'invalid schema extension with non-schema, unknown and repeated non-repeatable directives' => [
-		'schema { query: Query } type Query',
-		'directive @d on SCALAR directive @f on SCHEMA extend schema @d @d @e @e @f @f',
+	'invalid schema extension with non-schema, unknown, repeated and already configured non-repeatable directives' => [
+		'directive @g on SCHEMA schema @g { query: Query } type Query',
+		'directive @d on SCALAR directive @f on SCHEMA extend schema @d @d @e @e @f @f @g @g',
 		[
 			"Directive @d #1 isn't allowed to be placed on schema definition",
 			"Directive @d #2 isn't allowed to be placed on schema definition",
 			"Schema definition can't be extended with unknown directive @e #1",
 			"Schema definition can't be extended with unknown directive @e #2",
 			"Directive @f on schema definition can't be repeated",
+			"Schema definition can't be extended with already configured non-repeatable directive @g",
 		],
 	],
 	// general type
@@ -267,15 +268,16 @@ return [
 			"Directive @d on enum type 'E' value 'O' isn't defined",
 		],
 	],
-	'invalid enum type extension with non-enum, unknown and repeated non-repeatable directives' => [
-		'enum E { M N }' . RootQueryType(),
-		'directive @d on SCALAR directive @f on ENUM extend enum E @d @d @e @e @f @f',
+	'invalid enum type extension with non-enum, unknown, repeated and already configured non-repeatable directives' => [
+		'directive @g on ENUM enum E @g { M N }' . RootQueryType(),
+		'directive @d on SCALAR directive @f on ENUM extend enum E @d @d @e @e @f @f @g @g',
 		[
 			"Directive @d #1 isn't allowed to be placed on enum type 'E'",
 			"Directive @d #2 isn't allowed to be placed on enum type 'E'",
 			"Enum type 'E' can't be extended with unknown directive @e #1",
 			"Enum type 'E' can't be extended with unknown directive @e #2",
 			"Directive @f on enum type 'E' can't be repeated",
+			"Enum type 'E' can't be extended with already configured non-repeatable directive @g",
 		],
 	],
 	// input object
@@ -450,15 +452,16 @@ return [
 			"Input object type 'IO' can't be extended with already configured non-repeatable directive @d",
 		],
 	],
-	'invalid input object type extension with non-input object, unknown and repeated non-repeatable directives' => [
-		'input IO' . RootQueryType(),
-		'directive @d on SCALAR directive @f on INPUT_OBJECT extend input IO @d @d @e @e @f @f',
+	'invalid input object type extension with non-input object, unknown, repeated and already configured non-repeatable directives' => [
+		'directive @g on INPUT_OBJECT input IO @g' . RootQueryType(),
+		'directive @d on SCALAR directive @f on INPUT_OBJECT extend input IO @d @d @e @e @f @f @g @g',
 		[
 			"Directive @d #1 isn't allowed to be placed on input object type 'IO'",
 			"Directive @d #2 isn't allowed to be placed on input object type 'IO'",
 			"Input object type 'IO' can't be extended with unknown directive @e #1",
 			"Input object type 'IO' can't be extended with unknown directive @e #2",
 			"Directive @f on input object type 'IO' can't be repeated",
+			"Input object type 'IO' can't be extended with already configured non-repeatable directive @g",
 		],
 	],
 	// interface
@@ -677,15 +680,16 @@ return [
 			"Interface type 'I' can't be extended with already configured non-repeatable directive @d",
 		],
 	],
-	'invalid interface type extension with non-interface, unknown and repeated non-repeatable directives' => [
-		'interface I' . RootQueryType(),
-		'directive @d on SCALAR directive @f on INTERFACE extend interface I @d @d @e @e @f @f',
+	'invalid interface type extension with non-interface, unknown, repeated and already configured non-repeatable directives' => [
+		'directive @g on INTERFACE interface I @g' . RootQueryType(),
+		'directive @d on SCALAR directive @f on INTERFACE extend interface I @d @d @e @e @f @f @g @g',
 		[
 			"Directive @d #1 isn't allowed to be placed on interface type 'I'",
 			"Directive @d #2 isn't allowed to be placed on interface type 'I'",
 			"Interface type 'I' can't be extended with unknown directive @e #1",
 			"Interface type 'I' can't be extended with unknown directive @e #2",
 			"Directive @f on interface type 'I' can't be repeated",
+			"Interface type 'I' can't be extended with already configured non-repeatable directive @g",
 		],
 	],
 	// object
@@ -881,15 +885,16 @@ return [
 			"Object type 'O' can't be extended with already configured non-repeatable directive @d",
 		],
 	],
-	'invalid object type extension with non-object, unknown and repeated non-repeatable directives' => [
-		'type O' . RootQueryType(),
-		'directive @d on SCALAR directive @f on OBJECT extend type O @d @d @e @e @f @f',
+	'invalid object type extension with non-object, unknown, repeated and already configured non-repeatable directives' => [
+		'directive @g on OBJECT type O @g' . RootQueryType(),
+		'directive @d on SCALAR directive @f on OBJECT extend type O @d @d @e @e @f @f @g @g',
 		[
 			"Directive @d #1 isn't allowed to be placed on object type 'O'",
 			"Directive @d #2 isn't allowed to be placed on object type 'O'",
 			"Object type 'O' can't be extended with unknown directive @e #1",
 			"Object type 'O' can't be extended with unknown directive @e #2",
 			"Directive @f on object type 'O' can't be repeated",
+			"Object type 'O' can't be extended with already configured non-repeatable directive @g",
 		],
 	],
 	// scalar
@@ -990,15 +995,16 @@ return [
 			'S' => Vojtechdobes\GraphQL\Builtin\StringScalarImplementation::class,
 		],
 	],
-	'invalid scalar type extension with non-scalar, unknown and repeated non-repeatable directives' => [
-		'scalar S' . RootQueryType(),
-		'directive @d on ENUM directive @f on SCALAR extend scalar S @d @d @e @e @f @f',
+	'invalid scalar type extension with non-scalar, unknown, repeated and already configured non-repeatable directives' => [
+		'directive @g on SCALAR scalar S @g' . RootQueryType(),
+		'directive @d on ENUM directive @f on SCALAR extend scalar S @d @d @e @e @f @f @g @g',
 		[
 			"Directive @d #1 isn't allowed to be placed on scalar type 'S'",
 			"Directive @d #2 isn't allowed to be placed on scalar type 'S'",
 			"Scalar type 'S' can't be extended with unknown directive @e #1",
 			"Scalar type 'S' can't be extended with unknown directive @e #2",
 			"Directive @f on scalar type 'S' can't be repeated",
+			"Scalar type 'S' can't be extended with already configured non-repeatable directive @g",
 		],
 		[
 			'S' => Vojtechdobes\GraphQL\Builtin\StringScalarImplementation::class,
@@ -1103,15 +1109,16 @@ return [
 			"Union type 'U' can't be extended with already configured non-repeatable directive @d",
 		],
 	],
-	'invalid union type extension with non-union, unknown and repeated non-repeatable directives' => [
-		'union U' . RootQueryType(),
-		'directive @d on SCALAR directive @f on UNION extend union U @d @d @e @e @f @f',
+	'invalid union type extension with non-union, unknown, repeated and already configured non-repeatable directives' => [
+		'directive @g on UNION union U @g' . RootQueryType(),
+		'directive @d on SCALAR directive @f on UNION extend union U @d @d @e @e @f @f @g @g',
 		[
 			"Directive @d #1 isn't allowed to be placed on union type 'U'",
 			"Directive @d #2 isn't allowed to be placed on union type 'U'",
 			"Union type 'U' can't be extended with unknown directive @e #1",
 			"Union type 'U' can't be extended with unknown directive @e #2",
 			"Directive @f on union type 'U' can't be repeated",
+			"Union type 'U' can't be extended with already configured non-repeatable directive @g",
 		],
 	],
 ];
