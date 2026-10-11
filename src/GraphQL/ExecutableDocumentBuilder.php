@@ -20,6 +20,9 @@ final class ExecutableDocumentBuilder
 	/** @var list<string> */
 	private $usedFragmentDefinitions = [];
 
+	/** @var list<string> */
+	private $validatedFragments = [];
+
 	private Validator $validator;
 
 
@@ -235,6 +238,8 @@ final class ExecutableDocumentBuilder
 			$operationDefinition->type->getExecutableDirectiveLocation(),
 			$operationDefinition->directives,
 		);
+
+		$this->validatedFragments = [];
 
 		$this->validateSelectionSet(
 			$operationVariableDefinitions,
@@ -511,6 +516,12 @@ final class ExecutableDocumentBuilder
 			Spec\ExecutableDirectiveLocation::FragmentSpread,
 			$fragmentSpread->directives,
 		);
+
+		if (in_array($fragmentDefinition->name, $this->validatedFragments, true)) {
+			return;
+		}
+
+		$this->validatedFragments[] = $fragmentDefinition->name;
 
 		$this->validateSelectionSet(
 			$variableDefinitions,

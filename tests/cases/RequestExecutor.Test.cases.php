@@ -192,6 +192,36 @@ return [
 			],
 		],
 	],
+	'valid operation with duplicate spread of a fragment' => [
+		'type Query { a: String b: String }',
+		[
+			'Query.a' => 'Alice',
+			'Query.b' => 'Bob',
+		],
+		'fragment F on Query { b } query { a ...F ...F }',
+		[],
+		[
+			'data' => [
+				'a' => 'Alice',
+				'b' => 'Bob',
+			],
+		],
+	],
+	'valid operation with fragments spread exponentially many times' => [
+		'type Query { a: String b: String }',
+		[
+			'Query.a' => 'Alice',
+			'Query.b' => 'Bob',
+		],
+		'query { ...F0 } fragment F0 on Query { a ...F1 ...F1 } fragment F1 on Query { a ...F2 ...F2 } fragment F2 on Query { a ...F3 ...F3 } fragment F3 on Query { a ...F4 ...F4 } fragment F4 on Query { a ...F5 ...F5 } fragment F5 on Query { a ...F6 ...F6 } fragment F6 on Query { a ...F7 ...F7 } fragment F7 on Query { a ...F8 ...F8 } fragment F8 on Query { a ...F9 ...F9 } fragment F9 on Query { a ...F10 ...F10 } fragment F10 on Query { a ...F11 ...F11 } fragment F11 on Query { a ...F12 ...F12 } fragment F12 on Query { a ...F13 ...F13 } fragment F13 on Query { a ...F14 ...F14 } fragment F14 on Query { a ...F15 ...F15 } fragment F15 on Query { a ...F16 ...F16 } fragment F16 on Query { a ...F17 ...F17 } fragment F17 on Query { a ...F18 ...F18 } fragment F18 on Query { a ...F19 ...F19 } fragment F19 on Query { a ...F20 ...F20 } fragment F20 on Query { a ...F21 ...F21 } fragment F21 on Query { a ...F22 ...F22 } fragment F22 on Query { a ...F23 ...F23 } fragment F23 on Query { a ...F24 ...F24 } fragment F24 on Query { a ...F25 ...F25 } fragment F25 on Query { b }',
+		[],
+		[
+			'data' => [
+				'a' => 'Alice',
+				'b' => 'Bob',
+			],
+		],
+	],
 	'valid operation with single field via fragment spread on interface type' => [
 		'type O implements I { a: String } interface I { a: String } type Query { a: I }',
 		[
