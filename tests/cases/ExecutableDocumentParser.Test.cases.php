@@ -73,6 +73,33 @@ return [
 			"In presence of multiple operations, anonymous operations aren't allowed",
 		],
 	],
+	'valid named operations with different names' => [
+		'type Query { a: String }',
+		'query Q1 { a } query Q2 { a }',
+		[],
+	],
+	'invalid named operations with same name' => [
+		'type Query { a: String }',
+		'query Q { a } query Q { a }',
+		[
+			"Operation 'Q' can't be defined multiple times",
+		],
+	],
+	'invalid named operations of different types with same name' => [
+		'schema { query: Query mutation: Mutation } type Mutation { a: String } type Query { a: String }',
+		'query Q { a } mutation Q { a } query Q { a }',
+		[
+			"Operation 'Q' can't be defined multiple times",
+		],
+	],
+	'invalid named operations with same name and other errors' => [
+		'type Query { a: String }',
+		'query Q { a } query Q($var1: A) { a }',
+		[
+			"Operation 'Q' can't be defined multiple times",
+			"Variable 'var1' of Query 'Q' #2 has unknown type 'A'",
+		],
+	],
 	'valid operation with single variable' => [
 		'type Query { a: String }',
 		'query Q($var1: String) { a }',

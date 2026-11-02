@@ -94,8 +94,38 @@ final class ExecutableDocumentBuilder
 			);
 		}
 
+		$operationNameCounts = [];
+
 		foreach ($this->operationDefinitions as $operationDefinition) {
-			$this->validateOperationDefinition($operationDefinition);
+			if ($operationDefinition->name !== null) {
+				$operationNameCounts[$operationDefinition->name] = ($operationNameCounts[$operationDefinition->name] ?? 0) + 1;
+			}
+		}
+
+		foreach ($operationNameCounts as $operationName => $operationNameCount) {
+			if ($operationNameCount > 1) {
+				$this->errors->addErrorMessage(
+					sprintf(
+						"Operation '%s' can't be defined multiple times",
+						$operationName,
+					),
+				);
+			}
+		}
+
+		$operationNameOccurrences = [];
+
+		foreach ($this->operationDefinitions as $operationDefinition) {
+			$name = $operationDefinition->name;
+			$formattedName = $operationDefinition->format();
+
+			if ($name !== null && $operationNameCounts[$name] > 1) {
+				$operationNameOccurrences[$name] = ($operationNameOccurrences[$name] ?? 0) + 1;
+
+				$formattedName .= sprintf(' #%s', $operationNameOccurrences[$name]);
+			}
+
+			$this->validateOperationDefinition($operationDefinition, $formattedName);
 		}
 
 		if ($this->operationDefinitions === []) {
@@ -172,6 +202,7 @@ final class ExecutableDocumentBuilder
 
 	private function validateOperationDefinition(
 		Executable\OperationDefinition $operationDefinition,
+		string $location,
 	): void
 	{
 		$rootOperationTypeDefinition = $this->schema->getRootOperationTypeDefinition($operationDefinition->type);
@@ -189,11 +220,9 @@ final class ExecutableDocumentBuilder
 
 		$this->operationRootTypeDefinitions[] = $rootOperationTypeDefinition;
 
-		$operationDefinitionLocation = $operationDefinition->format();
-
 		Validator::validateDuplicates(
 			$this->errors,
-			$operationDefinitionLocation,
+			$location,
 			'define variable',
 			$operationDefinition->variableDefinitions,
 			static fn ($variableDefinition) => $variableDefinition->name,
@@ -205,7 +234,7 @@ final class ExecutableDocumentBuilder
 			$variableDefinitionLocation = sprintf(
 				"Variable '%s' of %s",
 				$variableDefinition->name,
-				$operationDefinitionLocation,
+				$location,
 			);
 
 			$this->validator->validateInputType(
@@ -240,7 +269,7 @@ final class ExecutableDocumentBuilder
 		$this->validator->validateDirectives(
 			$this->errors,
 			$operationVariableDefinitions,
-			$operationDefinitionLocation,
+			$location,
 			$operationDefinition->type->getExecutableDirectiveLocation(),
 			$operationDefinition->directives,
 		);
@@ -249,7 +278,7 @@ final class ExecutableDocumentBuilder
 
 		$this->validateSelectionSet(
 			$operationVariableDefinitions,
-			$operationDefinitionLocation,
+			$location,
 			$rootOperationTypeDefinition,
 			$operationDefinition->selectionSet,
 		);
