@@ -20,6 +20,15 @@ final class ExecutableDocumentBuilder
 	/** @var list<string> */
 	private $usedFragmentDefinitions = [];
 
+	/** @var list<string> */
+	private $validatedFragments = [];
+
+	/** @var list<string> */
+	private $fragmentSpreadPath = [];
+
+	/** @var array<string, list<string>> */
+	private $possibleTypes = [];
+
 	private Validator $validator;
 
 
@@ -85,8 +94,38 @@ final class ExecutableDocumentBuilder
 			);
 		}
 
+		$operationNameCounts = [];
+
 		foreach ($this->operationDefinitions as $operationDefinition) {
-			$this->validateOperationDefinition($operationDefinition);
+			if ($operationDefinition->name !== null) {
+				$operationNameCounts[$operationDefinition->name] = ($operationNameCounts[$operationDefinition->name] ?? 0) + 1;
+			}
+		}
+
+		foreach ($operationNameCounts as $operationName => $operationNameCount) {
+			if ($operationNameCount > 1) {
+				$this->errors->addErrorMessage(
+					sprintf(
+						"Operation '%s' can't be defined multiple times",
+						$operationName,
+					),
+				);
+			}
+		}
+
+		$operationNameOccurrences = [];
+
+		foreach ($this->operationDefinitions as $operationDefinition) {
+			$name = $operationDefinition->name;
+			$formattedName = $operationDefinition->format();
+
+			if ($name !== null && $operationNameCounts[$name] > 1) {
+				$operationNameOccurrences[$name] = ($operationNameOccurrences[$name] ?? 0) + 1;
+
+				$formattedName .= sprintf(' #%s', $operationNameOccurrences[$name]);
+			}
+
+			$this->validateOperationDefinition($operationDefinition, $formattedName);
 		}
 
 		if ($this->operationDefinitions === []) {
@@ -163,6 +202,7 @@ final class ExecutableDocumentBuilder
 
 	private function validateOperationDefinition(
 		Executable\OperationDefinition $operationDefinition,
+		string $location,
 	): void
 	{
 		$rootOperationTypeDefinition = $this->schema->getRootOperationTypeDefinition($operationDefinition->type);
@@ -180,11 +220,9 @@ final class ExecutableDocumentBuilder
 
 		$this->operationRootTypeDefinitions[] = $rootOperationTypeDefinition;
 
-		$operationDefinitionLocation = $operationDefinition->format();
-
 		Validator::validateDuplicates(
 			$this->errors,
-			$operationDefinitionLocation,
+			$location,
 			'define variable',
 			$operationDefinition->variableDefinitions,
 			static fn ($variableDefinition) => $variableDefinition->name,
@@ -196,7 +234,7 @@ final class ExecutableDocumentBuilder
 			$variableDefinitionLocation = sprintf(
 				"Variable '%s' of %s",
 				$variableDefinition->name,
-				$operationDefinitionLocation,
+				$location,
 			);
 
 			$this->validator->validateInputType(
@@ -231,14 +269,16 @@ final class ExecutableDocumentBuilder
 		$this->validator->validateDirectives(
 			$this->errors,
 			$operationVariableDefinitions,
-			$operationDefinitionLocation,
+			$location,
 			$operationDefinition->type->getExecutableDirectiveLocation(),
 			$operationDefinition->directives,
 		);
 
+		$this->validatedFragments = [];
+
 		$this->validateSelectionSet(
 			$operationVariableDefinitions,
-			$operationDefinitionLocation,
+			$location,
 			$rootOperationTypeDefinition,
 			$operationDefinition->selectionSet,
 		);
@@ -297,11 +337,7 @@ final class ExecutableDocumentBuilder
 		Executable\Field $field,
 	): void
 	{
-		if ($field->name === '__typename') {
-			return;
-		}
-
-		if ($typeDefinition instanceof TypeSystem\UnionTypeDefinition) {
+		if ($field->name !== '__typename' && $typeDefinition instanceof TypeSystem\UnionTypeDefinition) {
 			$this->errors->addErrorMessage(
 				sprintf(
 					"Only fragments and __typename are allowed in selection set on union type '%s'",
@@ -317,6 +353,7 @@ final class ExecutableDocumentBuilder
 		$fieldDefinition = match ($field->name) {
 			'__schema' => $this->getIntrospectionSchemaField($typeDefinition),
 			'__type' => $this->getIntrospectionTypeField($typeDefinition),
+			'__typename' => $this->getIntrospectionTypenameField(),
 			default => $typeDefinition->fieldsByName[$field->name] ?? null,
 		};
 
@@ -361,7 +398,8 @@ final class ExecutableDocumentBuilder
 			} else {
 				$this->errors->addErrorMessage(
 					sprintf(
-						"Object field '%s.%s' has %s type '%s' which requires selecting subfields",
+						"%s field '%s.%s' has %s type '%s' which requires selecting subfields",
+						ucfirst($typeDefinition->kind->format()),
 						$typeDefinition->name,
 						$field->name,
 						$fieldTypeDefinition->kind->format(),
@@ -372,7 +410,8 @@ final class ExecutableDocumentBuilder
 		} elseif ($field->selectionSet !== null) {
 			$this->errors->addErrorMessage(
 				sprintf(
-					"Object field '%s.%s' has %s type '%s' which doesn't support selecting subfields",
+					"%s field '%s.%s' has %s type '%s' which doesn't support selecting subfields",
+					ucfirst($typeDefinition->kind->format()),
 					$typeDefinition->name,
 					$field->name,
 					$fieldTypeDefinition->kind->format(),
@@ -434,6 +473,19 @@ final class ExecutableDocumentBuilder
 
 
 
+	private function getIntrospectionTypenameField(): TypeSystem\FieldDefinition
+	{
+		return new TypeSystem\FieldDefinition(
+			argumentDefinitions: [],
+			description: null,
+			directives: [],
+			name: '__typename',
+			type: new Types\NonNullType(new Types\NamedType('String')),
+		);
+	}
+
+
+
 	/**
 	 * @param array<string, Executable\VariableDefinition> $variableDefinitions
 	 */
@@ -459,50 +511,25 @@ final class ExecutableDocumentBuilder
 
 		$this->usedFragmentDefinitions[] = $fragmentDefinition->name;
 
-		/** @var TypeSystem\TypeWithFieldSelection|null $fragmentTypeDefinition */
 		$fragmentTypeDefinition = $this->schema->getTypeDefinitionOrNull($fragmentDefinition->onType->name);
 
-		if ($fragmentTypeDefinition === null) {
-			return;
+		if (!$fragmentTypeDefinition instanceof TypeSystem\TypeWithFieldSelection) {
+			return; // invalid type condition is reported by validation of fragment definition
 		}
 
-		if ($typeDefinition instanceof TypeSystem\InterfaceTypeDefinition) {
-			$isCompatible = match (true) {
-				$fragmentTypeDefinition instanceof TypeSystem\InterfaceTypeDefinition,
-				$fragmentTypeDefinition instanceof TypeSystem\ObjectTypeDefinition => (
-					$typeDefinition->name === $fragmentTypeDefinition->name
-					|| in_array($typeDefinition->name, $fragmentTypeDefinition->implementedInterfaces, true)
+		if ($this->areTypesWithFieldSelectionCompatible($typeDefinition, $fragmentTypeDefinition) === false) {
+			$this->errors->addErrorMessage(
+				sprintf(
+					"Type condition of fragment '%s' spread on %s type '%s' must be on a compatible type, but %s type '%s' given",
+					$fragmentDefinition->name,
+					$typeDefinition->kind->format(),
+					$typeDefinition->name,
+					$fragmentTypeDefinition->kind->format(),
+					$fragmentTypeDefinition->name,
 				),
-				$fragmentTypeDefinition instanceof TypeSystem\UnionTypeDefinition => $fragmentTypeDefinition->name === $typeDefinition->name,
-			};
+			);
 
-			if ($isCompatible === false) {
-				$this->errors->addErrorMessage(
-					sprintf(
-						"Type condition of fragment '%s' spread on interface type '%s' must be on a compatible type, but %s type '%s' given",
-						$fragmentDefinition->name,
-						$typeDefinition->name,
-						$fragmentTypeDefinition->kind->format(),
-						$fragmentTypeDefinition->name,
-					),
-				);
-
-				return;
-			}
-		} elseif ($typeDefinition instanceof TypeSystem\UnionTypeDefinition) {
-			if (in_array($fragmentTypeDefinition->name, $typeDefinition->possibleTypes, true) === false) {
-				$this->errors->addErrorMessage(
-					sprintf(
-						"Type condition of fragment '%s' spread on union type '%s' must be on its member type, but %s type '%s' given",
-						$fragmentDefinition->name,
-						$typeDefinition->name,
-						$fragmentTypeDefinition->kind->format(),
-						$fragmentTypeDefinition->name,
-					),
-				);
-
-				return;
-			}
+			return;
 		}
 
 		$this->validator->validateDirectives(
@@ -513,12 +540,36 @@ final class ExecutableDocumentBuilder
 			$fragmentSpread->directives,
 		);
 
+		$cycleStart = array_search($fragmentDefinition->name, $this->fragmentSpreadPath, true);
+
+		if ($cycleStart !== false) {
+			$this->errors->addErrorMessage(
+				sprintf(
+					"Fragment '%s' can't spread itself (%s)",
+					$fragmentDefinition->name,
+					implode(' -> ', [...array_slice($this->fragmentSpreadPath, $cycleStart), $fragmentDefinition->name]),
+				),
+			);
+
+			return;
+		}
+
+		if (in_array($fragmentDefinition->name, $this->validatedFragments, true)) {
+			return;
+		}
+
+		$this->validatedFragments[] = $fragmentDefinition->name;
+
+		$this->fragmentSpreadPath[] = $fragmentDefinition->name;
+
 		$this->validateSelectionSet(
 			$variableDefinitions,
 			"Fragment '{$fragmentDefinition->name}'",
-			$typeDefinition,
+			$fragmentTypeDefinition,
 			$fragmentDefinition->selectionSet,
 		);
+
+		array_pop($this->fragmentSpreadPath);
 	}
 
 
@@ -547,39 +598,30 @@ final class ExecutableDocumentBuilder
 				return;
 			}
 
-			/** @var TypeSystem\TypeWithFieldSelection $fragmentTypeDefinition (This is verified by being already in selection) */
+			if (!$fragmentTypeDefinition instanceof TypeSystem\TypeWithFieldSelection) {
+				$this->errors->addErrorMessage(
+					sprintf(
+						"Type condition of inline fragment must be interface, object or union, but %s type '%s' given",
+						$fragmentTypeDefinition->kind->format(),
+						$fragmentTypeDefinition->name,
+					),
+				);
 
-			if ($typeDefinition instanceof TypeSystem\InterfaceTypeDefinition) {
-				if (
-					!$fragmentTypeDefinition instanceof TypeSystem\ObjectTypeDefinition
-					|| in_array($typeDefinition->name, $fragmentTypeDefinition->implementedInterfaces, true) === false
-				) {
-					$this->errors->addErrorMessage(
-						sprintf(
-							"Type condition of inline fragment on interface type '%s' must be on object type implementing it, but %s type '%s' given",
-							$typeDefinition->name,
-							$fragmentTypeDefinition->kind->format(),
-							$fragmentTypeDefinition->name,
-						),
-					);
+				return;
+			}
 
-					return;
-				}
-			} elseif ($typeDefinition instanceof TypeSystem\UnionTypeDefinition) {
-				if (in_array($fragmentTypeDefinition->name, $typeDefinition->possibleTypes, true) === false) {
-					$this->errors->addErrorMessage(
-						sprintf(
-							"Type condition of inline fragment on union type '%s' must be on its member type, but %s type '%s' given",
-							$typeDefinition->name,
-							$fragmentTypeDefinition->kind->format(),
-							$fragmentTypeDefinition->name,
-						),
-					);
+			if ($this->areTypesWithFieldSelectionCompatible($typeDefinition, $fragmentTypeDefinition) === false) {
+				$this->errors->addErrorMessage(
+					sprintf(
+						"Type condition of inline fragment on %s type '%s' must be on a compatible type, but %s type '%s' given",
+						$typeDefinition->kind->format(),
+						$typeDefinition->name,
+						$fragmentTypeDefinition->kind->format(),
+						$fragmentTypeDefinition->name,
+					),
+				);
 
-					return;
-				}
-
-				/** @var TypeSystem\ObjectTypeDefinition $fragmentTypeDefinition (This is verified by being among Union possible types which must be Object) */
+				return;
 			}
 		} else {
 			$fragmentTypeDefinition = $typeDefinition;
@@ -599,6 +641,40 @@ final class ExecutableDocumentBuilder
 			$fragmentTypeDefinition,
 			$inlineFragment->selectionSet,
 		);
+	}
+
+
+
+	private function areTypesWithFieldSelectionCompatible(TypeSystem\TypeWithFieldSelection $a, TypeSystem\TypeWithFieldSelection $b): bool
+	{
+		if ($a->name === $b->name) {
+			return true;
+		}
+
+		return array_intersect($this->listPossibleTypes($a), $this->listPossibleTypes($b)) !== [];
+	}
+
+
+
+	/**
+	 * @return list<string>
+	 */
+	private function listPossibleTypes(TypeSystem\TypeWithFieldSelection $typeDefinition): array
+	{
+		return $this->possibleTypes[$typeDefinition->name] ??= match (true) {
+			$typeDefinition instanceof TypeSystem\ObjectTypeDefinition => [$typeDefinition->name],
+			$typeDefinition instanceof TypeSystem\UnionTypeDefinition => $typeDefinition->possibleTypes,
+			$typeDefinition instanceof TypeSystem\InterfaceTypeDefinition => array_values(array_map(
+				static fn ($objectTypeDefinition) => $objectTypeDefinition->name,
+				array_filter(
+					$this->schema->getTypeDefinitions(),
+					static fn ($aTypeDefinition) => (
+						$aTypeDefinition instanceof TypeSystem\ObjectTypeDefinition
+						&& in_array($typeDefinition->name, $aTypeDefinition->implementedInterfaces, true)
+					),
+				),
+			)),
+		};
 	}
 
 }

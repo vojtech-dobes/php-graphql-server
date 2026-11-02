@@ -61,10 +61,12 @@ final class OperationExecution
 		array $selectionSet,
 	): GuzzleHttp\Promise\PromiseInterface
 	{
+		$visitedFragments = [];
+
 		$fields = $this->collectFields(
 			$objectType,
 			$selectionSet,
-			[],
+			$visitedFragments,
 		);
 
 		$areAllFieldsNotNullable = true;
@@ -235,7 +237,7 @@ final class OperationExecution
 	private function collectFields(
 		GraphQL\TypeSystem\ObjectTypeDefinition $objectType,
 		array $selectionSet,
-		array $visitedFragments,
+		array & $visitedFragments,
 	): array
 	{
 		$result = [];
@@ -303,7 +305,7 @@ final class OperationExecution
 	private function collectFromFragmentSpread(
 		GraphQL\TypeSystem\ObjectTypeDefinition $objectType,
 		GraphQL\Executable\FragmentSpread $fragmentSpread,
-		array $visitedFragments,
+		array & $visitedFragments,
 	): Generator
 	{
 		if (in_array($fragmentSpread->fragmentName, $visitedFragments, true)) {
@@ -336,7 +338,7 @@ final class OperationExecution
 	private function collectFromInlineFragment(
 		GraphQL\TypeSystem\ObjectTypeDefinition $objectType,
 		GraphQL\Executable\InlineFragment $inlineFragment,
-		array $visitedFragments,
+		array & $visitedFragments,
 	): Generator
 	{
 		if ($inlineFragment->onType !== null) {

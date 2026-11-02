@@ -6,6 +6,7 @@ require_once __DIR__ . '/../bootstrap.php';
  * @dataProvider SchemaParser.extensions.Test.cases.php
  */
 
+/** @var array<mixed> $case */
 $case = Tester\Environment::loadData();
 
 [

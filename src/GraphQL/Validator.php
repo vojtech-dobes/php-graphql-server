@@ -167,11 +167,19 @@ final class Validator
 			$directiveDefinition = $this->directiveDefinitionRegistry->getItemOrNull($directiveName);
 
 			if ($directiveDefinition === null) {
-				foreach ($groupedDirectives as $directive) {
+				foreach ($groupDirectives as $i => $groupDirective) {
+					$directiveReference = sprintf(
+						'@%s%s',
+						$directiveName,
+						count($groupDirectives) > 1
+							? sprintf(' #%s', $i + 1)
+							: '',
+					);
+
 					$errors->addErrorMessage(
 						sprintf(
-							"Directive @%s on %s isn't defined",
-							$directiveName,
+							"Directive %s on %s isn't defined",
+							$directiveReference,
 							lcfirst($location),
 						),
 					);
@@ -181,11 +189,19 @@ final class Validator
 			}
 
 			if (in_array($allowedLocation, $directiveDefinition->locations, true) === false) {
-				foreach ($groupedDirectives as $directive) {
+				foreach ($groupDirectives as $i => $groupDirective) {
+					$directiveReference = sprintf(
+						'@%s%s',
+						$directiveName,
+						count($groupDirectives) > 1
+							? sprintf(' #%s', $i + 1)
+							: '',
+					);
+
 					$errors->addErrorMessage(
 						sprintf(
-							"Directive @%s isn't allowed to be placed on %s",
-							$directiveName,
+							"Directive %s isn't allowed to be placed on %s",
+							$directiveReference,
 							lcfirst($location),
 						),
 					);
@@ -260,12 +276,20 @@ final class Validator
 			$directiveDefinition = $this->directiveDefinitionRegistry->getItemOrNull($directiveName);
 
 			if ($directiveDefinition === null) {
-				foreach ($groupedDirectives as $directive) {
+				foreach ($groupDirectives as $i => $groupDirective) {
+					$directiveReference = sprintf(
+						'@%s%s',
+						$directiveName,
+						count($groupDirectives) > 1
+							? sprintf(' #%s', $i + 1)
+							: '',
+					);
+
 					$errors->addErrorMessage(
 						sprintf(
-							"%s can't be extended with unknown directive @%s",
+							"%s can't be extended with unknown directive %s",
 							ucfirst($location),
-							$directiveName,
+							$directiveReference,
 						),
 					);
 				}
@@ -274,11 +298,19 @@ final class Validator
 			}
 
 			if (in_array($allowedLocation, $directiveDefinition->locations, true) === false) {
-				foreach ($groupedDirectives as $directive) {
+				foreach ($groupDirectives as $i => $groupDirective) {
+					$directiveReference = sprintf(
+						'@%s%s',
+						$directiveName,
+						count($groupDirectives) > 1
+							? sprintf(' #%s', $i + 1)
+							: '',
+					);
+
 					$errors->addErrorMessage(
 						sprintf(
-							"Directive @%s isn't allowed to be placed on %s",
-							$directiveName,
+							"Directive %s isn't allowed to be placed on %s",
+							$directiveReference,
 							lcfirst($location),
 						),
 					);
@@ -619,10 +651,10 @@ final class Validator
 
 		$itemType = $expectedType->getWrappedType();
 
-		foreach ($actualValue->items as $itemValue) {
+		foreach ($actualValue->items as $i => $itemValue) {
 			$this->validateValue(
 				$errors,
-				'X' . $location,
+				sprintf('List item #%s in %s', $i + 1, lcfirst($location)),
 				$itemType,
 				$itemValue,
 			);
